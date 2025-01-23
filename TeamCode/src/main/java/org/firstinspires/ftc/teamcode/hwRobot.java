@@ -196,6 +196,23 @@ public class hwRobot {
                 new SleepAction(2),
                 LRest());
     }
-    public Action
+    public Action Bin(){
+        return new SequentialAction(
+                RBin(),
+                ABin(),
+                WBin(),
+                new SleepAction(.3),
+                LBin()
+        );
+    }
+    public Action In(){
+        return new SequentialAction(
+                RIn(),
+                AIn(),
+                WIn(),
+                new SleepAction(.5),
+                LIn()
+        );
+    }
 }
 
