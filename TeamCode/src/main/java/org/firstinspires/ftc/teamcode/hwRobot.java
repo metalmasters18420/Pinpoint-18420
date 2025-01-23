@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 public class hwRobot {
     HardwareMap hm = null;
-    MecanumDrive drive = null;
+    PinpointDrive drive = null;
 
     public DcMotor lLift = null;
     public DcMotor rLift = null;
@@ -55,7 +55,7 @@ public class hwRobot {
         arm = hm.get(Servo.class, "A"); //CH4
         spin = hm.get(Servo.class, "S"); //CH1
 
-        drive = new MecanumDrive(hmap,new Pose2d(0,0,0));
+        drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
 
         lrotate.setPosition(Rrest);
         rrotate.setPosition(Rrest);
