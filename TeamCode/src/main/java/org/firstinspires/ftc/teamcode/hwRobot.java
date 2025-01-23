@@ -23,6 +23,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -147,7 +148,7 @@ public class hwRobot {
         }
     }
 
-    public class L
+
 
     public Action CC(){
         return new MoveClaw(Cclose);
@@ -182,16 +183,19 @@ public class hwRobot {
     public Action Wrest(){
         return new MoveWrist(Wrest);
     }
-    public Action LBin(){return new ;}
+    public Action LBin(){return new InstantAction(()->lift.LiftBin());}
+    public Action LIn(){return new InstantAction(()->lift.LiftIn());}
+    public Action LRest(){return new InstantAction(()->lift.LiftRest());}
 
     public Action Rest(){
         return new SequentialAction(
                 CO(),
                 RRest(),
                 ARest(),
-                Wrest()
-                );
-
+                Wrest(),
+                new SleepAction(2),
+                LRest());
     }
+    public Action
 }
 
