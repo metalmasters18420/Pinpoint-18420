@@ -42,18 +42,20 @@ public class BlueBucketAuto extends LinearOpMode {
         hwRobot robot = new hwRobot();
         robot.init(hardwareMap);
 
-        robot.drive.pose = new Pose2d(-30,-60,Math.toRadians(0));
+        robot.drive.pose = new Pose2d(-40,-63,Math.toRadians(0));
 
         TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-30, -60, Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(-60, -50),Math.toRadians(45))
+                .strafeToSplineHeading(new Vector2d(-56, -55),Math.toRadians(45))
 //                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .turnTo(Math.toRadians(75))
+                .strafeToSplineHeading(new Vector2d(-48, -30.7),Math.toRadians(90))
+                //.turnTo(Math.toRadians(75))
                 .waitSeconds(1)
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
-                .turnTo(Math.toRadians(45))
+                .strafeToSplineHeading(new Vector2d(-56, -55),Math.toRadians(45))
+                //.turnTo(Math.toRadians(45))
                 .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder middlesample = turntobinONE.fresh()
@@ -99,8 +101,13 @@ public class BlueBucketAuto extends LinearOpMode {
         Actions.runBlocking(
                new SequentialAction(
                        ToBucket,
-//                       robot.HBin(),
-                       new SleepAction(1.5),
+                       robot.Bin(),
+                       new SleepAction(5),
+                       robot.CO(),
+                       new SleepAction(1),
+                       robot.Rest(),
+
+
 //                       robot.oclawopen(),
                        new SleepAction(.5),
 //                       robot.RestArm(),
