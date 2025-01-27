@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 // RR-specific imports
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
 @Config
+@Disabled
 @Autonomous(name="Test Blue Auto", group = "Auto")
 public class TestBlueAuto extends LinearOpMode {
     @Override

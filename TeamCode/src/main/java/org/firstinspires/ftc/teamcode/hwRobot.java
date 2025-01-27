@@ -2,14 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 //import static org.firstinspires.ftc.teamcode.ServoSpeed.ksu;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
+import static org.firstinspires.ftc.teamcode.VariablesArm.Adown;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Ain;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Arest;
+import static org.firstinspires.ftc.teamcode.VariablesArm.Awall;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Cclose;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Copen;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Sin3;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Srest;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbin;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lin2;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
@@ -72,8 +76,8 @@ public class hwRobot {
 
         drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
 
-        lrotate.setPosition(Rrest);
-        rrotate.setPosition(Rrest);
+        lrotate.setPosition(0.98);
+        rrotate.setPosition(0.98);
         lrotate.setDirection(Servo.Direction.REVERSE);
 
         Light.setPosition(.277);
@@ -148,6 +152,19 @@ public class hwRobot {
         }
     }
 
+    public class MoveSpin implements Action{
+        double c;
+        public MoveSpin(double c) {
+            this.c = c;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            spin.setPosition(c);
+            return false;
+        }
+    }
+
 
 
     public Action CC(){
@@ -171,6 +188,12 @@ public class hwRobot {
     public Action AIn(){
         return new MoveArm(Ain);
     }
+    public Action Adown(){
+        return new MoveArm(Adown);
+    }
+    public Action Awall(){
+        return new MoveArm(Awall);
+    }
     public Action ARest(){
         return new MoveArm(Arest);
     }
@@ -183,26 +206,48 @@ public class hwRobot {
     public Action Wrest(){
         return new MoveWrist(Wrest);
     }
+    public Action Sin3(){
+        return new MoveSpin(Sin3);
+    }
+    public Action Srest(){
+        return new MoveSpin(Srest);
+    }
     public Action LBin(){return new InstantAction(()->lift.LiftBin());}
     public Action LIn(){return new InstantAction(()->lift.LiftIn());}
+    public Action LIn2(){return new InstantAction(()->lift.LiftIn2());}
+    public Action LIn3(){return new InstantAction(()->lift.LiftIn3());}
     public Action LRest(){return new InstantAction(()->lift.LiftRest());}
 
     public Action Rest(){
         return new SequentialAction(
-                CO(),
+                //CO(),
                 RRest(),
                 ARest(),
                 Wrest(),
-                new SleepAction(2),
+                new SleepAction(0.5),
                 LRest());
     }
+
+    public Action RestFromIn(){
+        return new SequentialAction(
+                AIn(),
+//                new SleepAction(1),
+                LRest(),
+                new SleepAction(0.5),
+                Srest(),
+                ARest(),
+                Wrest(),
+                RRest());
+    }
+
     public Action Bin(){
         return new SequentialAction(
                 RBin(),
+                new SleepAction(.1),
+                LBin(),
+                new SleepAction(.65),
                 ABin(),
-                WBin(),
-                new SleepAction(.3),
-                LBin()
+                WBin()
         );
     }
     public Action In(){
@@ -212,6 +257,25 @@ public class hwRobot {
                 WIn(),
                 new SleepAction(.5),
                 LIn()
+        );
+    }
+    public Action In2(){
+        return new SequentialAction(
+                RIn(),
+                AIn(),
+                WIn(),
+                new SleepAction(.5),
+                LIn2()
+        );
+    }
+    public Action In3(){
+        return new SequentialAction(
+                RIn(),
+                AIn(),
+                WIn(),
+                Sin3(),
+                new SleepAction(.5),
+                LIn3()
         );
     }
 }

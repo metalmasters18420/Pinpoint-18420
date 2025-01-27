@@ -10,6 +10,7 @@ public class VariablesClaw {
     public static double Copen = 0.08;
 
     public static double Srest = .5;
+    public static double Sin3 = .6;
 
     public static double Wbar = .5;
     public static double Wbar2 = .2;

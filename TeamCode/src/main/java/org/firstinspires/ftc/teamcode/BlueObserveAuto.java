@@ -18,7 +18,7 @@ import org.opencv.core.Mat;
 
 
 @Config
-@Autonomous(name="Blue Observe Auto", group = "Auto")
+@Autonomous(name="Observe Auto", group = "Auto")
 public class BlueObserveAuto extends LinearOpMode {
     @Override
     public void runOpMode() {

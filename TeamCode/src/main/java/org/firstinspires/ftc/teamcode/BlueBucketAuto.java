@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
 @Config
-@Autonomous(name="Blue Bucket Auto", group = "Auto")
+@Autonomous(name="Bucket Auto", group = "Auto")
 public class BlueBucketAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
@@ -42,42 +42,40 @@ public class BlueBucketAuto extends LinearOpMode {
         hwRobot robot = new hwRobot();
         robot.init(hardwareMap);
 
-        robot.drive.pose = new Pose2d(-40,-63,Math.toRadians(0));
 
-        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-30, -60, Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(-56, -55),Math.toRadians(45))
+        robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
+
+
+
+        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
+                .strafeToSplineHeading(new Vector2d(-53, -50),Math.toRadians(45))
+                //.setTangent(-0.6556956)
+                //.lineToX(-53)
+                //.splineTo(new Vector2d(-56, -55),Math.toRadians(45))
+                .turnTo(Math.toRadians(45))
 //                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .strafeToSplineHeading(new Vector2d(-48, -30.7),Math.toRadians(90))
-                //.turnTo(Math.toRadians(75))
-                .waitSeconds(1)
+                .turnTo(Math.toRadians(76))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
-                .strafeToSplineHeading(new Vector2d(-56, -55),Math.toRadians(45))
-                //.turnTo(Math.toRadians(45))
-                .waitSeconds(3)
+                .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder middlesample = turntobinONE.fresh()
-                .turnTo(Math.toRadians(95))
-                .waitSeconds(1)
+                .turnTo(Math.toRadians(98))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTWO = middlesample.fresh()
                 .turnTo(Math.toRadians(45))
-                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder leftsample = turntobinTWO.fresh()
-                .turnTo(Math.toRadians(120))
-                .waitSeconds(1)
+                .turnTo(Math.toRadians(118))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTHREE = leftsample.fresh()
                 .turnTo(Math.toRadians(45))
-                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
-                .strafeToSplineHeading(new Vector2d(-40, -10), Math.toRadians(180))
-                .setTangent(Math.toRadians(0))
-                .lineToX(-20)
+                .strafeToSplineHeading(new Vector2d(-37, -7), Math.toRadians(180))
+                .strafeToConstantHeading(new Vector2d(-14, -7))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -102,65 +100,69 @@ public class BlueBucketAuto extends LinearOpMode {
                new SequentialAction(
                        ToBucket,
                        robot.Bin(),
-                       new SleepAction(5),
+                       new SleepAction(.4),
                        robot.CO(),
-                       new SleepAction(1),
+                       new SleepAction(0.2),
                        robot.Rest(),
 
 
-//                       robot.oclawopen(),
-                       new SleepAction(.5),
-//                       robot.RestArm(),
-                        new SleepAction(10),
-//                       ToRS,
-//                       new SleepAction(3),
-////                       robot.binRSpre(),
-////                       new SleepAction(1),
-////                       robot.binRSpost(),
-////                       new SleepAction(2),
-////                       robot.Hretract(),
-////                       robot.Transfer(),
-////                       new SleepAction(.1),
-//                       Turn1,
-//                       new SleepAction(3),
-////                       robot.HBin(),
-////                       robot.oclawopen(),
-////                       new SleepAction(.5),
-////                       robot.RestArm(),
-////                       new SleepAction(3),
-//                       ToMS,
-//                       new SleepAction(3),
-////                       robot.binMSpre(),
-////                       new SleepAction(1),
-////                       robot.binMSpost(),
-////                       new SleepAction(2),
-////                       robot.Hretract(),
-////                       robot.Transfer(),
-////                       new SleepAction(.1),
-//                       Turn2,
-//                       new SleepAction(3),
-////                       robot.HBin(),
-////                       robot.oclawopen(),
-////                       new SleepAction(.5),
-////                       robot.RestArm(),
-////                       new SleepAction(3),
-//                       ToLS,
-//                       new SleepAction(3),
-////                       robot.binLSpre(),
-////                       new SleepAction(1),
-////                       robot.binLSpost(),
-////                       new SleepAction(2),
-////                       robot.Transfer(),
-////                       new SleepAction(.1),
-//                       Turn3,
-//                       new SleepAction(3),
-////                       robot.HBin(),
-////                       robot.oclawopen(),
-////                       new SleepAction(.5),
-////                       robot.RestArm(),
-////                       new SleepAction(3)
+                       ToRS,
+                       robot.In(),
+                       new SleepAction(0.5),
+                       robot.Adown(),
+                       new SleepAction(0.25),
+                       robot.CC(),
+                       new SleepAction(0.25),
+                       robot.RestFromIn(),
+
+
+                       Turn1,
+                       robot.Bin(),
+                       new SleepAction(.4),
+                       robot.CO(),
+                       new SleepAction(0.2),
+                       robot.Rest(),
+
+
+                       ToMS,
+                       robot.In2(),
+                       new SleepAction(0.5),
+                       robot.Adown(),
+                       new SleepAction(0.25),
+                       robot.CC(),
+                       new SleepAction(0.25),
+                       robot.RestFromIn(),
+
+
+                       Turn2,
+                       robot.Bin(),
+                       new SleepAction(.4),
+                       robot.CO(),
+                       new SleepAction(0.2),
+                       robot.Rest(),
+
+                       ToLS,
+                       robot.In3(),
+                       new SleepAction(0.5),
+                       robot.Adown(),
+                       new SleepAction(0.25),
+                       robot.CC(),
+                       new SleepAction(0.25),
+                       robot.RestFromIn(),
+
+
+                       Turn3,
+                       robot.Bin(),
+                       new SleepAction(.4),
+                       robot.CO(),
+                       new SleepAction(0.2),
+                       robot.Rest(),
+
+
                        ToSubmerse,
-                       new SleepAction(3)
-                ));
+                       robot.Awall(),
+                       robot.RBin(),
+                       new SleepAction(4)
+               ));
     }
 }
