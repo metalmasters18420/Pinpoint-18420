@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.VariablesLift.Lbin;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lhang1;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lhang2;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lin;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lin2;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lin3;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lspeed;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lwall;
@@ -66,6 +68,14 @@ public class Lift {
     public void LiftIn(){
         left.setTargetPosition(Lin);
         right.setTargetPosition(Lin);
+    }
+    public void LiftIn2(){
+        left.setTargetPosition(Lin2);
+        right.setTargetPosition(Lin2);
+    }
+    public void LiftIn3(){
+        left.setTargetPosition(Lin3);
+        right.setTargetPosition(Lin3);
     }
     public void Move(double y){
         left.setTargetPosition((int) (left.getCurrentPosition() + THING * -y));
