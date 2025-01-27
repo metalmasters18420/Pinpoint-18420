@@ -231,7 +231,7 @@ public class DriveControl extends  OpMode {
 
                 }
 
-                if (gamepad2.b && Bdelay){
+                if (gamepad1.b && Bdelay){
                     hw.arm.setPosition(Adown);
                 }
                 else {
