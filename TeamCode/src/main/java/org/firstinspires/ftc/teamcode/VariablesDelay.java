@@ -15,4 +15,7 @@ public class VariablesDelay {
     public static double TransDelay = 200;
     public static double wait = 300;
 
+    public static double LRED = .277;
+    public static double LGREEN = .5;
+
 }

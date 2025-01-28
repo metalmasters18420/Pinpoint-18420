@@ -17,10 +17,13 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wwall;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.LGREEN;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.LRED;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.RotateDelay;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar2;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbin;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rwall;
@@ -63,7 +66,8 @@ public class DriveControl extends  OpMode {
         BIN,
         BAR,
         BAR2,
-        IN
+        IN,
+        HANG
     }
 
     robot bobot = robot.REST;
@@ -91,7 +95,7 @@ public class DriveControl extends  OpMode {
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
 
-        if (RGB){
+        if (x1Toggle){
             hw.Light.setPosition(hw.Light.getPosition() + .01);
             light.reset();
         }
@@ -121,6 +125,7 @@ public class DriveControl extends  OpMode {
         }
         if (x1Toggle){
             hw.spin.setPosition(Srest);
+            hw.Light.setPosition(LRED);
         }
         else {
             if (gamepad1.right_bumper){
@@ -129,6 +134,7 @@ public class DriveControl extends  OpMode {
             if (gamepad1.left_bumper){
                 hw.spin.setPosition(hw.spin.getPosition() - .02);
             }
+            hw.Light.setPosition(LGREEN);
         }
 
         x1Last = x1Current;
@@ -168,10 +174,16 @@ public class DriveControl extends  OpMode {
                     bobot = robot.IN;
 
                 }
+                if (gamepad2.x && Bdelay){
+
+                    Hang();
+                    liftClock.reset();
+                    bobot = robot.HANG;
+                }
             break;
             case BIN:
 
-                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 2000){
+                if (liftClock.milliseconds() > 1000 && liftClock.milliseconds() < 2000){
                     hw.lift.LiftBin();
                 }
 
@@ -319,5 +331,12 @@ public class DriveControl extends  OpMode {
             hw.wrist.setPosition(Win);
             hw.lrotate.setPosition(Rin);
             hw.rrotate.setPosition(Rin);
+        }
+
+        public void Hang(){
+            hw.arm.setPosition(Arest);
+            hw.lift.LiftRest();
+            hw.lrotate.setPosition(Rhang);
+            hw.rrotate.setPosition(Rhang);
         }
 }
