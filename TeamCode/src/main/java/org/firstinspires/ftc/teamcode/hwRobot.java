@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Cclose;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Copen;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Sin3;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Srest;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Wauto;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbin;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
@@ -197,6 +198,7 @@ public class hwRobot {
     public Action ARest(){
         return new MoveArm(Arest);
     }
+    public Action WAuto(){return new MoveWrist(Wauto);}
     public Action WBin(){
         return new MoveWrist(Wbin);
     }
@@ -217,6 +219,7 @@ public class hwRobot {
     public Action LIn2(){return new InstantAction(()->lift.LiftIn2());}
     public Action LIn3(){return new InstantAction(()->lift.LiftIn3());}
     public Action LRest(){return new InstantAction(()->lift.LiftRest());}
+
 
     public Action Rest(){
         return new SequentialAction(
