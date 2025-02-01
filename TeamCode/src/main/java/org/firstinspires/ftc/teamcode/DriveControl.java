@@ -39,6 +39,7 @@ import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Drawing;
@@ -129,10 +130,15 @@ public class DriveControl extends  OpMode {
 
         x1Last = x1Current;
 
+        if (gamepad2.x && gamepad2.y){
+            hw.lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            hw.rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
         switch (bobot) {
             case REST:
 
-                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 1000){
+                if (liftClock.milliseconds() > 100 && liftClock.milliseconds() < 2000){
                     Rest();
                 }
 
@@ -143,30 +149,30 @@ public class DriveControl extends  OpMode {
                     bobot = robot.BIN;
 
                 }
-                if (gamepad2.dpad_right && Bdelay){
+                if (gamepad2.dpad_left && Bdelay){
 
                     Hang();
                     liftClock.reset();
                     bobot = robot.HANG;
 
                 }
-                if (gamepad2.y && Bdelay){
+                if (gamepad2.dpad_right && Bdelay){
 
                     Intake();
                     liftClock.reset();
                     bobot = robot.IN;
 
                 }
-                if (gamepad2.dpad_left && Bdelay){
-
-                    Hang2();
-                    liftClock.reset();
-                    bobot = robot.HANG2;
-                }
+//                if (gamepad2.dpad_left && Bdelay){
+//
+//                    Hang2();
+//                    liftClock.reset();
+//                    bobot = robot.HANG2;
+//                }
             break;
             case BIN:
 
-                if (liftClock.milliseconds() > 1000 && liftClock.milliseconds() < 2000){
+                if (liftClock.milliseconds() > 500 && liftClock.milliseconds() < 2000){
                     hw.lift.LiftBin();
                 }
 
@@ -174,6 +180,7 @@ public class DriveControl extends  OpMode {
 
                     hw.lift.LiftRest();
                     liftClock.reset();
+                    Rest();
                     bobot = robot.REST;
 
                 }
@@ -202,6 +209,7 @@ public class DriveControl extends  OpMode {
 
                     hw.lift.LiftRest();
                     liftClock.reset();
+                    Rest();
                     bobot = robot.REST;
 
                 }
@@ -216,8 +224,13 @@ public class DriveControl extends  OpMode {
 
                     hw.lift.LiftRest();
                     liftClock.reset();
-                    bobot = robot.REST;
 
+                    if (hw.lLift.getCurrentPosition() < 50){
+                        bobot = robot.REST;
+                    }
+                }
+                else {
+                    hw.lift.Move(gamepad2.right_trigger - gamepad2.left_trigger);
                 }
 
                 if (gamepad1.b && Bdelay){
@@ -226,9 +239,6 @@ public class DriveControl extends  OpMode {
                 else {
                     hw.arm.setPosition(Ain);
                 }
-
-                hw.lift.Move(gamepad2.left_stick_y);
-
             break;
             default:
                 bobot = robot.REST;

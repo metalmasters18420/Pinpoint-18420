@@ -56,7 +56,7 @@ public class BlueBucketAuto extends LinearOpMode {
 //                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .turnTo(Math.toRadians(77))
+                .turnTo(Math.toRadians(78))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))

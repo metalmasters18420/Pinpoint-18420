@@ -11,7 +11,7 @@ public class VariablesLift {
     public static int Lhang1 = 800;
     public static int Lhang2 = 1800;
     public static int Lin = 765;
-    public static int Lin2 = 740;
+    public static int Lin2 = 700;
     public static int Lin3 = 860;
     public static int Lrest = 0;
     public static int Lspeed = 1;
