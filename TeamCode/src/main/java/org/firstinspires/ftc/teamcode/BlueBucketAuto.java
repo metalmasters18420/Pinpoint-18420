@@ -100,7 +100,7 @@ public class BlueBucketAuto extends LinearOpMode {
                new SequentialAction(
                        ToBucket,
                        robot.Bin(),
-                       new SleepAction(.4),
+                       new SleepAction(.55),
                        robot.CO(),
                        new SleepAction(0.2),
                        robot.Rest(),
@@ -118,7 +118,7 @@ public class BlueBucketAuto extends LinearOpMode {
 
                        Turn1,
                        robot.Bin(),
-                       new SleepAction(.4),
+                       new SleepAction(.55),
                        robot.CO(),
                        new SleepAction(0.2),
                        robot.Rest(),
@@ -136,7 +136,7 @@ public class BlueBucketAuto extends LinearOpMode {
 
                        Turn2,
                        robot.Bin(),
-                       new SleepAction(.4),
+                       new SleepAction(.55),
                        robot.CO(),
                        new SleepAction(0.2),
                        robot.Rest(),
@@ -153,7 +153,7 @@ public class BlueBucketAuto extends LinearOpMode {
 
                        Turn3,
                        robot.Bin(),
-                       new SleepAction(.4),
+                       new SleepAction(.55),
                        robot.CO(),
                        new SleepAction(0.2),
                        robot.Rest(),
