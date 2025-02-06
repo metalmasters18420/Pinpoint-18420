@@ -96,7 +96,7 @@ public class DriveControl extends  OpMode {
         boolean RGB = light.milliseconds() > .01;
 
         a2Current = gamepad2.a;
-
+        double encoderVal = hw.armEncoder.getVoltage();
         if (a2Current && !a2Last){
             a2Toggle = !a2Toggle;
         }
@@ -257,7 +257,7 @@ public class DriveControl extends  OpMode {
         telemetry.addData("x", hw.drive.pose.position.x);
         telemetry.addData("y", hw.drive.pose.position.y);
         telemetry.addData("heading (deg)", Math.toDegrees(hw.drive.pose.heading.toDouble()));
-
+        telemetry.addData("Encoder Voltage", encoderVal);
         telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
         telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
         telemetry.addData("leftTarget",hw.lLift.getCurrentPosition());

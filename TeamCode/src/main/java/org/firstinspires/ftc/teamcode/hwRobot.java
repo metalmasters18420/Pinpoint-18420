@@ -30,7 +30,9 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -40,9 +42,10 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 public class hwRobot {
     HardwareMap hm = null;
     PinpointDrive drive = null;
-
+    public AnalogInput armEncoder = null;
     public DcMotor lLift = null;
     public DcMotor rLift = null;
+    public DcMotor Rotate = null;
 
     public Servo rrotate = null;
     public Servo lrotate = null;
@@ -64,9 +67,10 @@ public class hwRobot {
 
     public void init(HardwareMap hmap) {
         hm = hmap;
-
+        armEncoder = hm.get(AnalogInput.class,"ELC"); //CH Analog Input 0 or 1
         lLift = hm.get(DcMotor.class, "LL"); //EH2 motor
         rLift = hm.get(DcMotor.class, "RL"); //EH3 motor
+        Rotate = hm.get(DcMotor.class, "R"); //EH3
         rrotate = hm.get(Servo.class,"RR"); //CH0
         lrotate = hm.get(Servo.class,"LR"); //CH5
         Light = hm.get(Servo.class, "L"); //EH5
@@ -80,6 +84,9 @@ public class hwRobot {
         lrotate.setPosition(0.98);
         rrotate.setPosition(0.98);
         lrotate.setDirection(Servo.Direction.REVERSE);
+        Rotate.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        Rotate.setPower(0);
 
         Light.setPosition(.277);
 
