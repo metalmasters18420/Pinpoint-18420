@@ -161,7 +161,7 @@ public class BlueBucketAuto extends LinearOpMode {
 
                        ToSubmerse,
                        robot.Awall(),
-                       robot.RBin(),
+//                       robot.RBin(),
                        robot.WAuto(),
                        new SleepAction(4)
                ));

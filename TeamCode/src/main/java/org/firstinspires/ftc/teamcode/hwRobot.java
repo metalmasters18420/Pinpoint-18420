@@ -39,10 +39,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.internal.stellaris.FlashLoaderResetCommand;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
+
+// intake voltage: .098
+// resting voltage: 1
+
+
 public class hwRobot {
     HardwareMap hm = null;
     PinpointDrive drive = null;
     public AnalogInput armEncoder = null;
+    public Rotation rotation = null;
     public DcMotor lLift = null;
     public DcMotor rLift = null;
     public DcMotor Rotate = null;
@@ -61,18 +67,14 @@ public class hwRobot {
     public Servo Light = null;
 
     public Lift lift = null;
-//    public ClawWheel clawWheel = null;
-//    public ServoSpeed rotation = null;
     public hwRobot() {}
 
     public void init(HardwareMap hmap) {
         hm = hmap;
         armEncoder = hm.get(AnalogInput.class,"ELC"); //CH Analog Input 0 or 1
-        lLift = hm.get(DcMotor.class, "LL"); //EH2 motor
-        rLift = hm.get(DcMotor.class, "RL"); //EH3 motor
-        Rotate = hm.get(DcMotor.class, "R"); //EH3
-        rrotate = hm.get(Servo.class,"RR"); //CH0
-        lrotate = hm.get(Servo.class,"LR"); //CH5
+        lLift = hm.get(DcMotor.class, "LL"); //EH0 motor
+        rLift = hm.get(DcMotor.class, "RL"); //EH1 motor
+        Rotate = hm.get(DcMotor.class, "R"); //EH3 motor
         Light = hm.get(Servo.class, "L"); //EH5
         claw = hm.get(Servo.class, "C"); //CH3
         wrist = hm.get(Servo.class, "W"); //CH2
@@ -81,12 +83,12 @@ public class hwRobot {
 
         drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
 
-        lrotate.setPosition(0.98);
-        rrotate.setPosition(0.98);
-        lrotate.setDirection(Servo.Direction.REVERSE);
-        Rotate.setDirection(DcMotorSimple.Direction.FORWARD);
+//        lrotate.setPosition(0.98);
+//        rrotate.setPosition(0.98);
+//        lrotate.setDirection(Servo.Direction.REVERSE);
 
-        Rotate.setPower(0);
+        rotation = new Rotation(Rotate, armEncoder);
+
 
         Light.setPosition(.277);
 
@@ -146,19 +148,19 @@ public class hwRobot {
         }
     }
 
-    public class MoveRotate implements Action{
-        double c;
-        public MoveRotate(double c) {
-            this.c = c;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            lrotate.setPosition(c);
-            rrotate.setPosition(c);
-            return false;
-        }
-    }
+//    public class MoveRotate implements Action{
+//        double c;
+//        public MoveRotate(double c) {
+//            this.c = c;
+//        }
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            lrotate.setPosition(c);
+//            rrotate.setPosition(c);
+//            return false;
+//        }
+//    }
 
     public class MoveSpin implements Action{
         double c;
@@ -181,15 +183,15 @@ public class hwRobot {
     public Action CO(){
         return new MoveClaw(Copen);
     }
-    public Action RBin(){
-        return new MoveRotate(Rbin);
-    }
-    public Action RIn(){
-        return new MoveRotate(Rin);
-    }
-    public Action RRest(){
-        return new MoveRotate(Rrest);
-    }
+//    public Action RBin(){
+//        return new MoveRotate(Rbin);
+//    }
+//    public Action RIn(){
+//        return new MoveRotate(Rin);
+//    }
+//    public Action RRest(){
+//        return new MoveRotate(Rrest);
+//    }
     public Action ABin(){
         return new MoveArm(Abin);
     }
@@ -231,7 +233,7 @@ public class hwRobot {
     public Action Rest(){
         return new SequentialAction(
                 //CO(),
-                RRest(),
+//                RRest(),
                 ARest(),
                 Wrest(),
                 new SleepAction(0.5),
@@ -246,13 +248,13 @@ public class hwRobot {
                 new SleepAction(0.5),
                 Srest(),
                 ARest(),
-                Wrest(),
-                RRest());
+                Wrest());
+                //RRest());
     }
 
     public Action Bin(){
         return new SequentialAction(
-                RBin(),
+//                RBin(),
                 new SleepAction(.1),
                 LBin(),
                 new SleepAction(.65),
@@ -262,7 +264,7 @@ public class hwRobot {
     }
     public Action In(){
         return new SequentialAction(
-                RIn(),
+//                RIn(),
                 AIn(),
                 WIn(),
                 new SleepAction(.5),
@@ -271,7 +273,7 @@ public class hwRobot {
     }
     public Action In2(){
         return new SequentialAction(
-                RIn(),
+//                RIn(),
                 AIn(),
                 WIn(),
                 new SleepAction(.5),
@@ -280,7 +282,7 @@ public class hwRobot {
     }
     public Action In3(){
         return new SequentialAction(
-                RIn(),
+//                RIn(),
                 AIn(),
                 WIn(),
                 Sin3(),
@@ -289,4 +291,3 @@ public class hwRobot {
         );
     }
 }
-

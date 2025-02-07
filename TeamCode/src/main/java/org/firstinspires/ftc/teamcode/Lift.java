@@ -30,7 +30,7 @@ public class Lift {
         this.right = rl;
 
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setTargetPosition(Lspeed);
+        right.setTargetPosition(Lrest);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setPower(Lspeed);
         right.setDirection(DcMotorSimple.Direction.REVERSE);

@@ -28,6 +28,7 @@ import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang2;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rwall;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.fun;
 
 import android.view.animation.RotateAnimation;
 
@@ -92,11 +93,14 @@ public class DriveControl extends  OpMode {
     @Override
     public void loop() {
 
+        hw.rotation.setTarget(fun);
+
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
 
         a2Current = gamepad2.a;
         double encoderVal = hw.armEncoder.getVoltage();
+
         if (a2Current && !a2Last){
             a2Toggle = !a2Toggle;
         }
@@ -260,10 +264,7 @@ public class DriveControl extends  OpMode {
         telemetry.addData("Encoder Voltage", encoderVal);
         telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
         telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
-        telemetry.addData("leftTarget",hw.lLift.getCurrentPosition());
-        telemetry.addData("rightTarget",hw.rLift.getCurrentPosition());
         telemetry.addData("power",hw.lLift.getPower());
-        telemetry.addData("power",hw.rLift.getPower());
         telemetry.addData("a2Toggle",a2Toggle);
 
         TelemetryPacket packet = new TelemetryPacket();
@@ -272,63 +273,65 @@ public class DriveControl extends  OpMode {
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
 
         telemetry.addData("lift position", hw.lLift.getCurrentPosition());
-        telemetry.addData("rotation", hw.rrotate.getPosition());
+//        telemetry.addData("rotation", hw.rrotate.getPosition());
         telemetry.addData("bobot", bobot);
 
         telemetry.update();
+
+        hw.rotation.Update();
         }
 
         public void Rest(){
             hw.arm.setPosition(Arest);
             hw.wrist.setPosition(Wrest);
-            hw.lrotate.setPosition(Rrest);
-            hw.rrotate.setPosition(Rrest);
+//            hw.lrotate.setPosition(Rrest);
+//            hw.rrotate.setPosition(Rrest);
         }
 
         public void Wall(){
             hw.arm.setPosition(Awall);
             hw.wrist.setPosition(Wwall);
-            hw.lrotate.setPosition(Rwall);
-            hw.rrotate.setPosition(Rwall);
+//            hw.lrotate.setPosition(Rwall);
+//            hw.rrotate.setPosition(Rwall);
         }
 
         public void Bin(){
             hw.arm.setPosition(Abin);
             hw.wrist.setPosition(Wbin);
-            hw.lrotate.setPosition(Rbin);
-            hw.rrotate.setPosition(Rbin);
+//            hw.lrotate.setPosition(Rbin);
+//            hw.rrotate.setPosition(Rbin);
         }
 
         public void Bar(){
             hw.arm.setPosition(Abar);
             hw.wrist.setPosition(Wbar);
-            hw.lrotate.setPosition(Rbar);
-            hw.rrotate.setPosition(Rbar);
+//            hw.lrotate.setPosition(Rbar);
+//            hw.rrotate.setPosition(Rbar);
         }
 
         public void Bar2(){
         hw.arm.setPosition(Abar2);
         hw.wrist.setPosition(Wbar2);
-        hw.lrotate.setPosition(Rbar2);
-        hw.rrotate.setPosition(Rbar2);
+//        hw.lrotate.setPosition(Rbar2);
+//        hw.rrotate.setPosition(Rbar2);
         }
 
         public void Intake(){
             hw.arm.setPosition(Ain);
             hw.wrist.setPosition(Win);
-            hw.lrotate.setPosition(Rin);
-            hw.rrotate.setPosition(Rin);
+//            hw.lrotate.setPosition(Rin);
+//            hw.rrotate.setPosition(Rin);
         }
 
         public void Hang() {
             hw.arm.setPosition(Arest);
             hw.lift.LiftRest();
-            hw.lrotate.setPosition(Rhang);
-            hw.rrotate.setPosition(Rhang);
+//            hw.lrotate.setPosition(Rhang);
+//            hw.rrotate.setPosition(Rhang);
         }
 
         public void Hang2(){
-        hw.rrotate.setPosition(Rhang2);
-        hw.lrotate.setPosition(Rhang2);
+//        hw.rrotate.setPosition(Rhang2);
+//        hw.lrotate.setPosition(Rhang2);
         }
 }
