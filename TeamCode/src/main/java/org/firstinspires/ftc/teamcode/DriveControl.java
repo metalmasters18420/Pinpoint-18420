@@ -20,17 +20,9 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LGREEN;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LRED;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.RotateDelay;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar2;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbin;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang2;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rwall;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.fun;
 
-import android.view.animation.RotateAnimation;
+import com.arcrobotics.ftclib.controller.PIDController;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -92,8 +84,6 @@ public class DriveControl extends  OpMode {
 
     @Override
     public void loop() {
-
-        hw.rotation.setTarget(fun);
 
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
@@ -267,6 +257,7 @@ public class DriveControl extends  OpMode {
         telemetry.addData("power",hw.lLift.getPower());
         telemetry.addData("a2Toggle",a2Toggle);
 
+
         TelemetryPacket packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke("#3F51B5");
         Drawing.drawRobot(packet.fieldOverlay(), hw.drive.pose);
@@ -278,7 +269,6 @@ public class DriveControl extends  OpMode {
 
         telemetry.update();
 
-        hw.rotation.Update();
         }
 
         public void Rest(){

@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
+//import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Rotate
 
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -49,9 +51,10 @@ public class hwRobot {
     PinpointDrive drive = null;
     public AnalogInput armEncoder = null;
     public Rotation rotation = null;
+
     public DcMotor lLift = null;
     public DcMotor rLift = null;
-    public DcMotor Rotate = null;
+    public DcMotorEx Rotate = null;
 
     public Servo rrotate = null;
     public Servo lrotate = null;
@@ -74,7 +77,7 @@ public class hwRobot {
         armEncoder = hm.get(AnalogInput.class,"ELC"); //CH Analog Input 0 or 1
         lLift = hm.get(DcMotor.class, "LL"); //EH0 motor
         rLift = hm.get(DcMotor.class, "RL"); //EH1 motor
-        Rotate = hm.get(DcMotor.class, "R"); //EH3 motor
+        Rotate = hm.get(DcMotorEx.class, "R"); //EH2 motor
         Light = hm.get(Servo.class, "L"); //EH5
         claw = hm.get(Servo.class, "C"); //CH3
         wrist = hm.get(Servo.class, "W"); //CH2
@@ -82,13 +85,6 @@ public class hwRobot {
         spin = hm.get(Servo.class, "S"); //CH1
 
         drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
-
-//        lrotate.setPosition(0.98);
-//        rrotate.setPosition(0.98);
-//        lrotate.setDirection(Servo.Direction.REVERSE);
-
-        rotation = new Rotation(Rotate, armEncoder);
-
 
         Light.setPosition(.277);
 
@@ -107,6 +103,9 @@ public class hwRobot {
         lift = new Lift(lLift,rLift);
             lLift.setTargetPosition(Lrest);
             rLift.setTargetPosition(Lrest);
+
+        rotation = new Rotation(Rotate, armEncoder);
+           rotation.RotateRest();
     }
 
     public class MoveClaw implements Action{
@@ -148,19 +147,19 @@ public class hwRobot {
         }
     }
 
-//    public class MoveRotate implements Action{
-//        double c;
-//        public MoveRotate(double c) {
-//            this.c = c;
-//        }
-//
-//        @Override
-//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-//            lrotate.setPosition(c);
-//            rrotate.setPosition(c);
-//            return false;
-//        }
-//    }
+    public class MoveRotate implements Action{
+        double c;
+        public MoveRotate(double c) {
+            this.c = c;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            lrotate.setPosition(c);
+            rrotate.setPosition(c);
+            return false;
+        }
+    }
 
     public class MoveSpin implements Action{
         double c;
@@ -183,15 +182,6 @@ public class hwRobot {
     public Action CO(){
         return new MoveClaw(Copen);
     }
-//    public Action RBin(){
-//        return new MoveRotate(Rbin);
-//    }
-//    public Action RIn(){
-//        return new MoveRotate(Rin);
-//    }
-//    public Action RRest(){
-//        return new MoveRotate(Rrest);
-//    }
     public Action ABin(){
         return new MoveArm(Abin);
     }
@@ -223,6 +213,8 @@ public class hwRobot {
     public Action Srest(){
         return new MoveSpin(Srest);
     }
+    public Action RRest(){return new InstantAction(()->rotation.RotateRest());}
+    public Action RIn(){return new InstantAction(()->rotation.RotateIn());}
     public Action LBin(){return new InstantAction(()->lift.LiftBin());}
     public Action LIn(){return new InstantAction(()->lift.LiftIn());}
     public Action LIn2(){return new InstantAction(()->lift.LiftIn2());}
@@ -232,8 +224,8 @@ public class hwRobot {
 
     public Action Rest(){
         return new SequentialAction(
-                //CO(),
-//                RRest(),
+                CO(),
+                RRest(),
                 ARest(),
                 Wrest(),
                 new SleepAction(0.5),
@@ -243,18 +235,18 @@ public class hwRobot {
     public Action RestFromIn(){
         return new SequentialAction(
                 AIn(),
-//                new SleepAction(1),
+                new SleepAction(1),
                 LRest(),
                 new SleepAction(0.5),
                 Srest(),
                 ARest(),
-                Wrest());
-                //RRest());
+                Wrest(),
+                RRest());
     }
 
     public Action Bin(){
         return new SequentialAction(
-//                RBin(),
+                RRest(),
                 new SleepAction(.1),
                 LBin(),
                 new SleepAction(.65),
@@ -264,7 +256,7 @@ public class hwRobot {
     }
     public Action In(){
         return new SequentialAction(
-//                RIn(),
+                RIn(),
                 AIn(),
                 WIn(),
                 new SleepAction(.5),
@@ -273,7 +265,7 @@ public class hwRobot {
     }
     public Action In2(){
         return new SequentialAction(
-//                RIn(),
+                RIn(),
                 AIn(),
                 WIn(),
                 new SleepAction(.5),
@@ -282,7 +274,7 @@ public class hwRobot {
     }
     public Action In3(){
         return new SequentialAction(
-//                RIn(),
+                RIn(),
                 AIn(),
                 WIn(),
                 Sin3(),

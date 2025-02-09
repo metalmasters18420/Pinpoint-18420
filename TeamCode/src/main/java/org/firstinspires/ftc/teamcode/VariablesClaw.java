@@ -6,11 +6,11 @@ import com.acmerobotics.dashboard.config.Config;
 
 public class VariablesClaw {
 
-    public static double Cclose = .28;
+    public static double Cclose = .33;
     public static double Copen = 0.08;
 
     public static double Srest = .5;
-    public static double Sin3 = .6;
+    public static double Sin3 = .75;
 
     public static double Wauto = .5;
     public static double Wbar = .5;

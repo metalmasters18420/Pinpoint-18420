@@ -41,6 +41,7 @@ public class BlueBucketAuto extends LinearOpMode {
 //        MecanumDrive drive = new MecanumDrive(hardwareMap, BlueObservePose);
         hwRobot robot = new hwRobot();
         robot.init(hardwareMap);
+        robot.RRest();
 
 
         robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
@@ -52,7 +53,7 @@ public class BlueBucketAuto extends LinearOpMode {
                 //.setTangent(-0.6556956)
                 //.lineToX(-53)
                 //.splineTo(new Vector2d(-56, -55),Math.toRadians(45))
-                .turnTo(Math.toRadians(45))
+                //.turnTo(Math.toRadians(45))
 //                .waitSeconds(3)
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
@@ -73,7 +74,13 @@ public class BlueBucketAuto extends LinearOpMode {
         TrajectoryActionBuilder turntobinTHREE = leftsample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
-        TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
+        TrajectoryActionBuilder fifth = turntobinTHREE.fresh()
+                .strafeToSplineHeading(new Vector2d(-14, -53), Math.toRadians(0))
+                .endTrajectory();
+        TrajectoryActionBuilder drivetobucket2 = fifth.fresh()
+                .strafeToSplineHeading(new Vector2d(-53, -50),Math.toRadians(45))
+                .endTrajectory();
+        TrajectoryActionBuilder drivetosubmerse = drivetobucket2.fresh()
                 .strafeToSplineHeading(new Vector2d(-37, -7), Math.toRadians(180))
                 .strafeToConstantHeading(new Vector2d(-14, -7))
                 .endTrajectory();
@@ -91,6 +98,10 @@ public class BlueBucketAuto extends LinearOpMode {
         Action ToLS = leftsample.build();
 
         Action Turn3 = turntobinTHREE.build();
+
+        Action s5 = fifth.build();
+
+        Action b2 = drivetobucket2.build();
 
         Action ToSubmerse = drivetosubmerse.build();
 
@@ -110,9 +121,9 @@ public class BlueBucketAuto extends LinearOpMode {
                        robot.In(),
                        new SleepAction(0.5),
                        robot.Adown(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.CC(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.RestFromIn(),
 
 
@@ -128,9 +139,9 @@ public class BlueBucketAuto extends LinearOpMode {
                        robot.In2(),
                        new SleepAction(0.5),
                        robot.Adown(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.CC(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.RestFromIn(),
 
 
@@ -145,9 +156,9 @@ public class BlueBucketAuto extends LinearOpMode {
                        robot.In3(),
                        new SleepAction(0.5),
                        robot.Adown(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.CC(),
-                       new SleepAction(0.25),
+                       new SleepAction(0.2),
                        robot.RestFromIn(),
 
 
@@ -158,10 +169,24 @@ public class BlueBucketAuto extends LinearOpMode {
                        new SleepAction(0.2),
                        robot.Rest(),
 
+                        s5,
+                        new SleepAction(.2),
+                        robot.Adown(),
+                        new SleepAction(.2),
+                        robot.CC(),
+                        new SleepAction(.2),
+                        robot.RestFromIn(),
+
+                        b2,
+                       robot.Bin(),
+                       new SleepAction(.55),
+                       robot.CO(),
+                       new SleepAction(0.2),
+                       robot.Rest(),
 
                        ToSubmerse,
                        robot.Awall(),
-//                       robot.RBin(),
+                       robot.RRest(),
                        robot.WAuto(),
                        new SleepAction(4)
                ));
