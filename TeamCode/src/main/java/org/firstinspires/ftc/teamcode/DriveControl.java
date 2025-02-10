@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Rotation.rPower;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abar;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abar2;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
@@ -20,7 +21,12 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LGREEN;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LRED;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.RotateDelay;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.d;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.degree_per_volt;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.fun;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.i;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.p;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.target;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -55,6 +61,8 @@ public class DriveControl extends  OpMode {
     boolean x1Last = false;
     boolean x1Toggle = false;
 
+    boolean a1Current = false, a1Last = false, a1Toggle = false;
+
     public enum robot{
         REST,
         BIN,
@@ -71,6 +79,9 @@ public class DriveControl extends  OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         telemetry.addData("Status", "Initialized");
+
+//        hw.controller = new PIDController(p, i, d);
+//        hw.controller.setPID(p, i, d);
     }
 
     public void start() {
@@ -85,11 +96,39 @@ public class DriveControl extends  OpMode {
     @Override
     public void loop() {
 
+//        double armPos = hw.armEncoder.getVoltage() * degree_per_volt;
+//        double pid = hw.controller.calculate(armPos, target);
+//        double power = pid; //+ ff;
+////        rPower = power;
+//
+//        hw.Rotate.setPower(power);
+
+
+
+
+
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
 
         a2Current = gamepad2.a;
         double encoderVal = hw.armEncoder.getVoltage();
+
+        a1Current = gamepad1.a;
+
+        if (a1Current && ! a1Last){
+            a1Toggle = !a1Toggle;
+        }
+        if (a1Toggle){
+            hw.rotation.RotateIn();
+        }
+        else {
+            hw.rotation.RotateRest();
+        }
+
+        a1Last = a1Current;
+
+        a2Current = gamepad2.a;
+
 
         if (a2Current && !a2Last){
             a2Toggle = !a2Toggle;
@@ -100,6 +139,7 @@ public class DriveControl extends  OpMode {
         else {
             hw.claw.setPosition(Copen);
         }
+
 
         a2Last = a2Current;
 
@@ -248,14 +288,22 @@ public class DriveControl extends  OpMode {
 
         hw.drive.updatePoseEstimate();
 
-        telemetry.addData("x", hw.drive.pose.position.x);
-        telemetry.addData("y", hw.drive.pose.position.y);
-        telemetry.addData("heading (deg)", Math.toDegrees(hw.drive.pose.heading.toDouble()));
-        telemetry.addData("Encoder Voltage", encoderVal);
+
+        hw.rotation.loop();
+
+
+          telemetry.addData("Target ", target);
+          telemetry.addData("Current ", hw.rotation.ELC.getVoltage() * degree_per_volt);
+          telemetry.addData("power ", rPower);
+
+//        telemetry.addData("x", hw.drive.pose.position.x);
+//        telemetry.addData("y", hw.drive.pose.position.y);
+//        telemetry.addData("heading (deg)", Math.toDegrees(hw.drive.pose.heading.toDouble()));
+//        telemetry.addData("Encoder Voltage", encoderVal);
         telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
         telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
-        telemetry.addData("power",hw.lLift.getPower());
-        telemetry.addData("a2Toggle",a2Toggle);
+//        telemetry.addData("power",hw.lLift.getPower());
+//        telemetry.addData("a2Toggle",a2Toggle);
 
 
         TelemetryPacket packet = new TelemetryPacket();

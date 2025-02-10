@@ -6,6 +6,8 @@ import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,10 +17,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
     public class Rotation extends SubsystemBase {
         private PIDController controller;
 
-        public static double p = 0.01, i = 0, d = 0.001, f = 0.003;
+        public static double p = 0, i = 0, d = 0, f = 0 ;
 
         public static double target = 0;
-        public final double degree_per_volt = 360 / 3.3;
+        public final static double degree_per_volt = 360 / 3.3;
+        public static double rPower = 0;
+        public static double offset = 23;
 
         public AnalogInput ELC;
         public DcMotor Rotate;
@@ -31,34 +35,28 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
             Rotate = r;
             ELC = a;
 
-//            telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-//            Rotate = hardwareMap.get(DcMotorEx.class, "R");
-//            ELC = hardwareMap.get(AnalogInput.class, "ELC");
-
             Rotate.setDirection(DcMotorSimple.Direction.FORWARD);
         }
 
         public void loop() {
 
+            controller.setPID(p, i, d);
+
             double armPos = ELC.getVoltage() * degree_per_volt;
             double pid = controller.calculate(armPos, target);
-            double ff = Math.cos(Math.toRadians(target * degree_per_volt)) * f;
+            double ff = Math.cos(Math.toRadians(armPos / degree_per_volt - offset)) * f;
             double power = pid + ff;
+            rPower = power;
+
 
             Rotate.setPower(power);
-//            telemetry.addData("pos ", armPos);
-//            telemetry.addData("target ", target);
-//            telemetry.addData("power ", pid);
-//            telemetry.update();
-
         }
 
-        public void RotateRest() {
+        public void RotateRest(){
             target = Rrest;
         }
 
-        public void RotateIn() {
+        public void RotateIn(){
             target = Rin;
         }
 

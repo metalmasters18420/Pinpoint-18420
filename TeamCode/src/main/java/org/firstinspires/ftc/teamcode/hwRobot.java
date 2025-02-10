@@ -30,6 +30,7 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -63,6 +64,8 @@ public class hwRobot {
     public Servo wrist = null;
     public Servo spin = null;
 
+    public PIDController controller = null;
+
     public Servo arm = null;
 
     public RevColorSensorV3 colorSensor = null;
@@ -71,6 +74,8 @@ public class hwRobot {
 
     public Lift lift = null;
     public hwRobot() {}
+
+
 
     public void init(HardwareMap hmap) {
         hm = hmap;
@@ -106,6 +111,8 @@ public class hwRobot {
 
         rotation = new Rotation(Rotate, armEncoder);
            rotation.RotateRest();
+           Rotate.setDirection(DcMotorSimple.Direction.REVERSE);
+           Rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public class MoveClaw implements Action{
@@ -173,8 +180,6 @@ public class hwRobot {
             return false;
         }
     }
-
-
 
     public Action CC(){
         return new MoveClaw(Cclose);
