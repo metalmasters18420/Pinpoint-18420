@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -105,95 +107,183 @@ public class BlueBucketAuto extends LinearOpMode {
 
         Action ToSubmerse = drivetosubmerse.build();
 
+        Action FullAuto = new SequentialAction(
+                ToBucket,
+                robot.Bin(),
+                new SleepAction(.55),
+                robot.CO(),
+                new SleepAction(0.2),
+                robot.Rest(),
+
+
+                ToRS,
+                robot.In(),
+                new SleepAction(0.5),
+                robot.Adown(),
+                new SleepAction(0.2),
+                robot.CC(),
+                new SleepAction(0.2),
+                robot.RestFromIn(),
+
+
+
+                Turn1,
+                new SleepAction(.5),
+                robot.Bin(),
+                new SleepAction(.55),
+                robot.CO(),
+                new SleepAction(0.2),
+                robot.Rest(),
+
+
+                ToMS,
+                robot.In2(),
+                new SleepAction(0.5),
+                robot.Adown(),
+                new SleepAction(0.2),
+                robot.CC(),
+                new SleepAction(0.2),
+                robot.RestFromIn(),
+
+
+                Turn2,
+                new SleepAction(.5),
+                robot.Bin(),
+                new SleepAction(.55),
+                robot.CO(),
+                new SleepAction(0.2),
+                robot.Rest(),
+
+                ToLS,
+                robot.In3(),
+                new SleepAction(0.5),
+                robot.Adown(),
+                new SleepAction(0.2),
+                robot.CC(),
+                new SleepAction(0.2),
+                robot.RestFromIn(),
+
+
+                Turn3,
+                new SleepAction(.5),
+                robot.Bin(),
+                new SleepAction(.55),
+                robot.CO(),
+                new SleepAction(0.2),
+                robot.Rest(),
+
+                s5,
+                new SleepAction(.2),
+                robot.Adown(),
+                new SleepAction(.2),
+                robot.CC(),
+                new SleepAction(.2),
+                robot.RestFromIn(),
+
+                b2,
+                robot.Bin(),
+                new SleepAction(.55),
+                robot.CO(),
+                new SleepAction(0.2),
+                robot.Rest(),
+
+                ToSubmerse,
+                robot.Awall(),
+                robot.RRest(),
+                robot.WAuto(),
+                new SleepAction(4)
+        )););
+
         waitForStart();
 
-        Actions.runBlocking(
+        Actions.runBlocking(new ParallelAction(FullAuto,ToBucket));
 
-               new SequentialAction(
-                       ToBucket,
-                       robot.Bin(),
-                       new SleepAction(.55),
-                       robot.CO(),
-                       new SleepAction(0.2),
-                       robot.Rest(),
+//               new SequentialAction(
+//                       ToBucket,
+//                       robot.Bin(),
+//                       new SleepAction(.55),
+//                       robot.CO(),
+//                       new SleepAction(0.2),
+//                       robot.Rest(),
+//
+//
+//                       ToRS,
+//                       robot.In(),
+//                       new SleepAction(0.5),
+//                       robot.Adown(),
+//                       new SleepAction(0.2),
+//                       robot.CC(),
+//                       new SleepAction(0.2),
+//                       robot.RestFromIn(),
+//
+//
+//
+//                       Turn1,
+//                       new SleepAction(.5),
+//                       robot.Bin(),
+//                       new SleepAction(.55),
+//                       robot.CO(),
+//                       new SleepAction(0.2),
+//                       robot.Rest(),
+//
+//
+//                       ToMS,
+//                       robot.In2(),
+//                       new SleepAction(0.5),
+//                       robot.Adown(),
+//                       new SleepAction(0.2),
+//                       robot.CC(),
+//                       new SleepAction(0.2),
+//                       robot.RestFromIn(),
+//
+//
+//                       Turn2,
+//                       new SleepAction(.5),
+//                       robot.Bin(),
+//                       new SleepAction(.55),
+//                       robot.CO(),
+//                       new SleepAction(0.2),
+//                       robot.Rest(),
+//
+//                       ToLS,
+//                       robot.In3(),
+//                       new SleepAction(0.5),
+//                       robot.Adown(),
+//                       new SleepAction(0.2),
+//                       robot.CC(),
+//                       new SleepAction(0.2),
+//                       robot.RestFromIn(),
+//
+//
+//                       Turn3,
+//                       new SleepAction(.5),
+//                       robot.Bin(),
+//                       new SleepAction(.55),
+//                       robot.CO(),
+//                       new SleepAction(0.2),
+//                       robot.Rest(),
+//
+//                        s5,
+//                        new SleepAction(.2),
+//                        robot.Adown(),
+//                        new SleepAction(.2),
+//                        robot.CC(),
+//                        new SleepAction(.2),
+//                        robot.RestFromIn(),
+//
+//                        b2,
+//                       robot.Bin(),
+//                       new SleepAction(.55),
+//                       robot.CO(),
+//                       new SleepAction(0.2),
+//                       robot.Rest(),
+//
+//                       ToSubmerse,
+//                       robot.Awall(),
+//                       robot.RRest(),
+//                       robot.WAuto(),
+//                       new SleepAction(4)
+//               ));
 
-
-                       ToRS,
-                       robot.In(),
-                       new SleepAction(0.5),
-                       robot.Adown(),
-                       new SleepAction(0.2),
-                       robot.CC(),
-                       new SleepAction(0.2),
-                       robot.RestFromIn(),
-
-
-
-                       Turn1,
-                       new SleepAction(.5),
-                       robot.Bin(),
-                       new SleepAction(.55),
-                       robot.CO(),
-                       new SleepAction(0.2),
-                       robot.Rest(),
-
-
-                       ToMS,
-                       robot.In2(),
-                       new SleepAction(0.5),
-                       robot.Adown(),
-                       new SleepAction(0.2),
-                       robot.CC(),
-                       new SleepAction(0.2),
-                       robot.RestFromIn(),
-
-
-                       Turn2,
-                       new SleepAction(.5),
-                       robot.Bin(),
-                       new SleepAction(.55),
-                       robot.CO(),
-                       new SleepAction(0.2),
-                       robot.Rest(),
-
-                       ToLS,
-                       robot.In3(),
-                       new SleepAction(0.5),
-                       robot.Adown(),
-                       new SleepAction(0.2),
-                       robot.CC(),
-                       new SleepAction(0.2),
-                       robot.RestFromIn(),
-
-
-                       Turn3,
-                       new SleepAction(.5),
-                       robot.Bin(),
-                       new SleepAction(.55),
-                       robot.CO(),
-                       new SleepAction(0.2),
-                       robot.Rest(),
-
-                        s5,
-                        new SleepAction(.2),
-                        robot.Adown(),
-                        new SleepAction(.2),
-                        robot.CC(),
-                        new SleepAction(.2),
-                        robot.RestFromIn(),
-
-                        b2,
-                       robot.Bin(),
-                       new SleepAction(.55),
-                       robot.CO(),
-                       new SleepAction(0.2),
-                       robot.Rest(),
-
-                       ToSubmerse,
-                       robot.Awall(),
-                       robot.RRest(),
-                       robot.WAuto(),
-                       new SleepAction(4)
-               ));
     }
 }
