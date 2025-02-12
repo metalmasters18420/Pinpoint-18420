@@ -21,12 +21,6 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LGREEN;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.LRED;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.RotateDelay;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.d;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.degree_per_volt;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.fun;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.i;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.p;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.target;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 
@@ -66,6 +60,9 @@ public class DriveControl extends  OpMode {
     public enum robot{
         REST,
         BIN,
+        BAR,
+        BAR2,
+        WALL,
         IN,
         HANG,
         HANG2
@@ -103,32 +100,27 @@ public class DriveControl extends  OpMode {
 //
 //        hw.Rotate.setPower(power);
 
-
-
-
-
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
 
         a2Current = gamepad2.a;
         double encoderVal = hw.armEncoder.getVoltage();
 
-        a1Current = gamepad1.a;
-
-        if (a1Current && ! a1Last){
-            a1Toggle = !a1Toggle;
-        }
-        if (a1Toggle){
-            hw.rotation.RotateIn();
-        }
-        else {
-            hw.rotation.RotateRest();
-        }
-
-        a1Last = a1Current;
+//        a1Current = gamepad1.a;
+//
+//        if (a1Current && ! a1Last){
+//            a1Toggle = !a1Toggle;
+//        }
+//        if (a1Toggle){
+//            hw.rotation.RotateIn();
+//        }
+//        else {
+//            hw.rotation.RotateRest();
+//        }
+//
+//        a1Last = a1Current;
 
         a2Current = gamepad2.a;
-
 
         if (a2Current && !a2Last){
             a2Toggle = !a2Toggle;
@@ -139,7 +131,6 @@ public class DriveControl extends  OpMode {
         else {
             hw.claw.setPosition(Copen);
         }
-
 
         a2Last = a2Current;
 
@@ -154,10 +145,10 @@ public class DriveControl extends  OpMode {
         }
         else {
             if (gamepad1.right_bumper){
-                hw.spin.setPosition(hw.spin.getPosition() + .02);
+                hw.spin.setPosition(hw.spin.getPosition() + .08);
             }
             if (gamepad1.left_bumper){
-                hw.spin.setPosition(hw.spin.getPosition() - .02);
+                hw.spin.setPosition(hw.spin.getPosition() - .08);
             }
             hw.Light.setPosition(LGREEN);
         }
@@ -179,7 +170,9 @@ public class DriveControl extends  OpMode {
                 if (gamepad2.dpad_up && Bdelay) {
 
                     Bin();
+                    hw.lift.LiftBin();
                     liftClock.reset();
+                    clock.reset();
                     bobot = robot.BIN;
 
                 }
@@ -187,6 +180,7 @@ public class DriveControl extends  OpMode {
 
                     Hang();
                     liftClock.reset();
+                    clock.reset();
                     bobot = robot.HANG;
 
                 }
@@ -194,41 +188,125 @@ public class DriveControl extends  OpMode {
 
                     Intake();
                     liftClock.reset();
+                    clock.reset();
                     bobot = robot.IN;
 
                 }
-//                if (gamepad2.dpad_left && Bdelay){
-//
-//                    Hang2();
-//                    liftClock.reset();
-//                    bobot = robot.HANG2;
-//                }
+                if (gamepad2.left_bumper && Bdelay){
+
+                    Wall();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.WALL;
+
+                }
             break;
             case BIN:
-
-                if (liftClock.milliseconds() > 500 && liftClock.milliseconds() < 2000){
-                    hw.lift.LiftBin();
-                }
+//                if (liftClock.milliseconds() > 500 && liftClock.milliseconds() < 2000){
+//                    hw.lift.LiftBin();
+//                }
 
                 if (gamepad2.dpad_down && Bdelay) {
 
                     hw.lift.LiftRest();
                     liftClock.reset();
+                    clock.reset();
                     Rest();
                     bobot = robot.REST;
 
                 }
-                break;
-            case HANG:
 
-                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 2000){
-                    hw.lift.LiftHang1();
+                if (gamepad2.dpad_left && Bdelay){
+
+                    Hang();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.HANG;
+
+                }
+                break;
+            case WALL:
+
+                if (liftClock.milliseconds() > 500 && liftClock.milliseconds() < 2000){
+                    hw.lift.LiftRest();
+                }
+
+                if (gamepad2.left_bumper && Bdelay){
+
+                    hw.arm.setPosition(Abar);
+                    hw.wrist.setPosition(Wbar);
+                    hw.lift.LiftBar();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.BAR;
                 }
 
                 if (gamepad2.dpad_down && Bdelay){
 
                     hw.lift.LiftRest();
                     liftClock.reset();
+                    clock.reset();
+                    bobot = robot.REST;
+
+                }
+                if (gamepad2.dpad_right && Bdelay){
+
+                    Intake();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.IN;
+
+                }
+
+                break;
+            case BAR:
+
+                if (gamepad2.left_bumper && Bdelay){
+
+                    hw.arm.setPosition(Awall);
+                    hw.wrist.setPosition(Wwall);
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.WALL;
+                }
+
+                if (gamepad2.dpad_down && Bdelay){
+
+                    hw.lift.LiftRest();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.REST;
+
+                }
+                if (gamepad2.dpad_right && Bdelay){
+
+                    Intake();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.IN;
+
+                }
+                break;
+//            case BAR2:
+//
+//                if (gamepad2.y && Bdelay){
+//
+//                    Rest();
+//                    liftClock.reset();
+//                    bobot = robot.REST;
+//
+//                }
+            case HANG:
+
+//                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 2000){
+//                    hw.lift.LiftHang1();
+//                }
+
+                if (gamepad2.dpad_down && Bdelay){
+
+                    hw.lift.LiftRest();
+                    liftClock.reset();
+                    clock.reset();
                     bobot = robot.REST;
 
                 }
@@ -243,6 +321,7 @@ public class DriveControl extends  OpMode {
 
                     hw.lift.LiftRest();
                     liftClock.reset();
+                    clock.reset();
                     Rest();
                     bobot = robot.REST;
 
@@ -250,9 +329,9 @@ public class DriveControl extends  OpMode {
                 break;
             case IN:
 
-                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 1000){
-                    hw.lift.LiftIn();
-                }
+//                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 1000){
+//                    hw.lift.LiftIn();
+//                }
 
                 if (gamepad2.dpad_down && Bdelay){
 
@@ -291,15 +370,13 @@ public class DriveControl extends  OpMode {
 
         hw.rotation.loop();
 
-
-          telemetry.addData("Target ", target);
-          telemetry.addData("Current ", hw.rotation.ELC.getVoltage() * degree_per_volt);
-          telemetry.addData("power ", rPower);
+         telemetry.addData("power ", rPower);
 
 //        telemetry.addData("x", hw.drive.pose.position.x);
 //        telemetry.addData("y", hw.drive.pose.position.y);
 //        telemetry.addData("heading (deg)", Math.toDegrees(hw.drive.pose.heading.toDouble()));
 //        telemetry.addData("Encoder Voltage", encoderVal);
+        telemetry.addData("armpos ", hw.arm.getPosition());
         telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
         telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
 //        telemetry.addData("power",hw.lLift.getPower());
@@ -322,29 +399,25 @@ public class DriveControl extends  OpMode {
         public void Rest(){
             hw.arm.setPosition(Arest);
             hw.wrist.setPosition(Wrest);
-//            hw.lrotate.setPosition(Rrest);
-//            hw.rrotate.setPosition(Rrest);
+            hw.rotation.RotateRest();
         }
 
         public void Wall(){
             hw.arm.setPosition(Awall);
             hw.wrist.setPosition(Wwall);
-//            hw.lrotate.setPosition(Rwall);
-//            hw.rrotate.setPosition(Rwall);
+            hw.rotation.RotateWall();
         }
 
         public void Bin(){
             hw.arm.setPosition(Abin);
             hw.wrist.setPosition(Wbin);
-//            hw.lrotate.setPosition(Rbin);
-//            hw.rrotate.setPosition(Rbin);
+            hw.rotation.RotateRest();
         }
 
         public void Bar(){
             hw.arm.setPosition(Abar);
             hw.wrist.setPosition(Wbar);
-//            hw.lrotate.setPosition(Rbar);
-//            hw.rrotate.setPosition(Rbar);
+            hw.rotation.RotateBar();
         }
 
         public void Bar2(){
@@ -357,15 +430,13 @@ public class DriveControl extends  OpMode {
         public void Intake(){
             hw.arm.setPosition(Ain);
             hw.wrist.setPosition(Win);
-//            hw.lrotate.setPosition(Rin);
-//            hw.rrotate.setPosition(Rin);
+            hw.rotation.RotateIn();
         }
 
         public void Hang() {
             hw.arm.setPosition(Arest);
-            hw.lift.LiftRest();
-//            hw.lrotate.setPosition(Rhang);
-//            hw.rrotate.setPosition(Rhang);
+            hw.lift.LiftHang1();
+            hw.rotation.RotateHang();
         }
 
         public void Hang2(){

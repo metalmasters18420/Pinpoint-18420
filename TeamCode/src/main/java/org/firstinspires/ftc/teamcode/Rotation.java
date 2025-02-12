@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rwall;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
@@ -17,12 +20,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
     public class Rotation extends SubsystemBase {
         private PIDController controller;
 
-        public static double p = 0, i = 0, d = 0, f = 0 ;
+        public static double p = 0.028, i = 0, d = 0, f = 0.05 ;
 
         public static double target = 0;
         public final static double degree_per_volt = 360 / 3.3;
         public static double rPower = 0;
-        public static double offset = 23;
+        public static double offset = 20;
 
         public AnalogInput ELC;
         public DcMotor Rotate;
@@ -35,7 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
             Rotate = r;
             ELC = a;
 
-            Rotate.setDirection(DcMotorSimple.Direction.FORWARD);
+            Rotate.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         public void loop() {
@@ -58,6 +61,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
         public void RotateIn(){
             target = Rin;
+        }
+
+        public void RotateWall(){
+            target = Rwall;
+        }
+
+        public void RotateBar(){
+            target = Rbar;
+        }
+
+        public void RotateHang(){
+           target = Rhang;
         }
 
 

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 //import static org.firstinspires.ftc.teamcode.ServoSpeed.ksu;
+import static org.firstinspires.ftc.teamcode.Rotation.degree_per_volt;
+import static org.firstinspires.ftc.teamcode.Rotation.target;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Adown;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Ain;
@@ -111,7 +113,6 @@ public class hwRobot {
 
         rotation = new Rotation(Rotate, armEncoder);
            rotation.RotateRest();
-           Rotate.setDirection(DcMotorSimple.Direction.REVERSE);
            Rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -154,19 +155,19 @@ public class hwRobot {
         }
     }
 
-    public class MoveRotate implements Action{
-        double c;
-        public MoveRotate(double c) {
-            this.c = c;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            lrotate.setPosition(c);
-            rrotate.setPosition(c);
-            return false;
-        }
-    }
+//    public class MoveRotate implements Action{
+//        double c;
+//        public MoveRotate(double c) {
+//            this.c = c;
+//        }
+//
+//        @Override
+//        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+//            lrotate.setPosition(c);
+//            rrotate.setPosition(c);
+//            return false;
+//        }
+//    }
 
     public class MoveSpin implements Action{
         double c;
@@ -181,6 +182,32 @@ public class hwRobot {
         }
     }
 
+    public class Rotate implements Action{
+        double t;
+        public Rotate(double t) {this.t = t;}
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            target = t;
+            rotation.loop();
+            return Math.abs(t - rotation.ELC.getVoltage() * degree_per_volt) > 10;
+        }
+    }
+
+    public class Rotate1 implements Action{
+        double t;
+        public Rotate1(double t) {this.t = t;}
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            target = t;
+            rotation.loop();
+            return true;
+        }
+    }
+
+    public Action RRest() {return new Rotate(Rrest);}
+    public Action RIn(){return new Rotate(Rin);}
     public Action CC(){
         return new MoveClaw(Cclose);
     }
@@ -218,8 +245,6 @@ public class hwRobot {
     public Action Srest(){
         return new MoveSpin(Srest);
     }
-    public Action RRest(){return new InstantAction(()->rotation.RotateRest());}
-    public Action RIn(){return new InstantAction(()->rotation.RotateIn());}
     public Action LBin(){return new InstantAction(()->lift.LiftBin());}
     public Action LIn(){return new InstantAction(()->lift.LiftIn());}
     public Action LIn2(){return new InstantAction(()->lift.LiftIn2());}
@@ -251,8 +276,8 @@ public class hwRobot {
 
     public Action Bin(){
         return new SequentialAction(
-                RRest(),
-                new SleepAction(.1),
+//                RRest(),
+//                new SleepAction(.1),
                 LBin(),
                 new SleepAction(.65),
                 ABin(),
