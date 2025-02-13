@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 //import static org.firstinspires.ftc.teamcode.ServoSpeed.ksu;
 import static org.firstinspires.ftc.teamcode.Rotation.degree_per_volt;
 import static org.firstinspires.ftc.teamcode.Rotation.target;
+import static org.firstinspires.ftc.teamcode.VariablesArm.Aauto;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Adown;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Ain;
@@ -195,17 +196,15 @@ public class hwRobot {
     }
 
     public class Rotate1 implements Action{
-        double t;
-        public Rotate1(double t) {this.t = t;}
+        public Rotate1(){}
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            target = t;
             rotation.loop();
             return true;
         }
     }
-
+    public Action RotateAlways(){return new Rotate1();}
     public Action RRest() {return new Rotate(Rrest);}
     public Action RIn(){return new Rotate(Rin);}
     public Action CC(){
@@ -226,6 +225,7 @@ public class hwRobot {
     public Action Awall(){
         return new MoveArm(Awall);
     }
+    public Action Aauto(){return new MoveArm(Aauto);}
     public Action ARest(){
         return new MoveArm(Arest);
     }
@@ -252,6 +252,7 @@ public class hwRobot {
     public Action LRest(){return new InstantAction(()->lift.LiftRest());}
 
 
+
     public Action Rest(){
         return new SequentialAction(
                 CO(),
@@ -265,9 +266,9 @@ public class hwRobot {
     public Action RestFromIn(){
         return new SequentialAction(
                 AIn(),
-                new SleepAction(1),
+//                new SleepAction(.2),
                 LRest(),
-                new SleepAction(0.5),
+                new SleepAction(0.3),
                 Srest(),
                 ARest(),
                 Wrest(),
@@ -286,29 +287,29 @@ public class hwRobot {
     }
     public Action In(){
         return new SequentialAction(
-                RIn(),
                 AIn(),
                 WIn(),
-                new SleepAction(.5),
+//                new SleepAction(.1),
+                RIn(),
                 LIn()
         );
     }
     public Action In2(){
         return new SequentialAction(
-                RIn(),
                 AIn(),
                 WIn(),
-                new SleepAction(.5),
+                RIn(),
+//                new SleepAction(.5),
                 LIn2()
         );
     }
     public Action In3(){
         return new SequentialAction(
-                RIn(),
                 AIn(),
                 WIn(),
+                RIn(),
                 Sin3(),
-                new SleepAction(.5),
+//                new SleepAction(.5),
                 LIn3()
         );
     }

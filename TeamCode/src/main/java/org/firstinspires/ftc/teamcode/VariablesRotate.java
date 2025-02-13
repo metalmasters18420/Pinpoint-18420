@@ -16,5 +16,4 @@ public class VariablesRotate {
     public static double Rrest = 120;
     public static double Rwall = 120;
 
-    public static double fun = 1;
 }
