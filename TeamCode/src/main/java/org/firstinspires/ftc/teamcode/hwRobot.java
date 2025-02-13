@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 //import static org.firstinspires.ftc.teamcode.ServoSpeed.ksu;
 import static org.firstinspires.ftc.teamcode.Rotation.degree_per_volt;
+import static org.firstinspires.ftc.teamcode.Rotation.offset;
 import static org.firstinspires.ftc.teamcode.Rotation.target;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Aauto;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
@@ -189,9 +190,9 @@ public class hwRobot {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            target = t;
+            target = t + offset;
             rotation.loop();
-            return Math.abs(t - rotation.ELC.getVoltage() * degree_per_volt) > 10;
+            return Math.abs(target - rotation.ELC.getVoltage() * degree_per_volt) > 10;
         }
     }
 

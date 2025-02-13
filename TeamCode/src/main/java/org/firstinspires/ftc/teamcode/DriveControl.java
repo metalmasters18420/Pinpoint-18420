@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Rotation.degree_per_volt;
 import static org.firstinspires.ftc.teamcode.Rotation.rPower;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abar;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abar2;
@@ -371,6 +372,7 @@ public class DriveControl extends  OpMode {
         hw.rotation.loop();
 
          telemetry.addData("power ", rPower);
+         telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
 
 //        telemetry.addData("x", hw.drive.pose.position.x);
 //        telemetry.addData("y", hw.drive.pose.position.y);

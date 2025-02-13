@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class VariablesLift {
 
     public static int Lbar = 70;
-    public static int Lbin = 1267;
+    public static int Lbin = 1300;
     public static int Lhang1 = 533;
     public static int Lhang2 = 1200;
     public static int Lin = 480;

@@ -51,40 +51,34 @@ public class BucketFiveHerberger extends LinearOpMode {
 
 
         TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(-52, -49),Math.toRadians(45))
-                //.setTangent(-0.6556956)
-                //.lineToX(-53)
-                //.splineTo(new Vector2d(-56, -55),Math.toRadians(45))
-                //.turnTo(Math.toRadians(45))
-//                .waitSeconds(3)
+                .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder fifth = drivetobucket.fresh()
                 .strafeToLinearHeading(new Vector2d(14, -60), Math.toRadians(0))
                 .endTrajectory();
         TrajectoryActionBuilder drivetobucket2 = fifth.fresh()
-                .strafeToSplineHeading(new Vector2d(-52, -49),Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket2.fresh()
-                .turnTo(Math.toRadians(79))
+                .turnTo(Math.toRadians(77))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder middlesample = turntobinONE.fresh()
-                .turnTo(Math.toRadians(99))
+                .turnTo(Math.toRadians(97))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTWO = middlesample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder leftsample = turntobinTWO.fresh()
-                .turnTo(Math.toRadians(119))
+                .turnTo(Math.toRadians(117))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTHREE = leftsample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
-                .strafeToSplineHeading(new Vector2d(-37, -7), Math.toRadians(180))
-                .strafeToConstantHeading(new Vector2d(-14, -7))
+                .strafeToLinearHeading(new Vector2d(-14, 0), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -165,6 +159,7 @@ public class BucketFiveHerberger extends LinearOpMode {
                 new SleepAction(0.2),
                 robot.Rest(),
 
+
                 ToLS,
                 robot.In3(),
                 new SleepAction(0.4),
@@ -181,10 +176,8 @@ public class BucketFiveHerberger extends LinearOpMode {
                 new SleepAction(0.2),
                 robot.Rest(),
 
-                ToSubmerse,
-                robot.Aauto(),
-                robot.RRest(),
-                robot.WAuto(),
+
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto()),
                 new SleepAction(4)
         );
 
