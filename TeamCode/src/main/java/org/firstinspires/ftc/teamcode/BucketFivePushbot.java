@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -39,6 +41,7 @@ public class BucketFivePushbot extends LinearOpMode {
         //Lift lift = new Lift(hardwareMap);
 //        MecanumDrive drive = new MecanumDrive(hardwareMap, BlueObservePose);
         hwRobot robot = new hwRobot();
+
         robot.init(hardwareMap);
         robot.RRest();
 
@@ -69,13 +72,13 @@ public class BucketFivePushbot extends LinearOpMode {
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder fifth = turntobinTHREE.fresh()
-                .strafeToLinearHeading(new Vector2d(-34, -60), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(-40, -60), Math.toRadians(0))
                 .endTrajectory();
         TrajectoryActionBuilder drivetobucket2 = fifth.fresh()
-                .strafeToSplineHeading(new Vector2d(-52, -49),Math.toRadians(45))
+                .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = drivetobucket2.fresh()
-                .strafeToLinearHeading(new Vector2d(-14, 0), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -102,7 +105,7 @@ public class BucketFivePushbot extends LinearOpMode {
 
                 ToBucket,
                 robot.Bin(),
-                new SleepAction(.3),
+                new SleepAction(.5),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -112,7 +115,7 @@ public class BucketFivePushbot extends LinearOpMode {
                 robot.In(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.3),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
@@ -120,7 +123,7 @@ public class BucketFivePushbot extends LinearOpMode {
 
 
                 new ParallelAction(robot.Bin(), Turn1),
-                new SleepAction(.3),
+                new SleepAction(.5),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -130,14 +133,14 @@ public class BucketFivePushbot extends LinearOpMode {
                 robot.In2(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.3),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
                 new ParallelAction(robot.Bin(), Turn2),
-                new SleepAction(.3),
+                new SleepAction(.5),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -147,14 +150,14 @@ public class BucketFivePushbot extends LinearOpMode {
                 robot.In3(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.3),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
                 new ParallelAction(robot.Bin(), Turn3),
-                new SleepAction(.3),
+                new SleepAction(.5),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -162,17 +165,17 @@ public class BucketFivePushbot extends LinearOpMode {
 
 
                 s5,
-                robot.In(),
+                new ParallelAction(robot.AIn(), robot.WIn(), robot.RIn()),
                 new SleepAction(.4),
                 robot.Adown(),
-                new SleepAction(.2),
+                new SleepAction(.3),
                 robot.CC(),
                 new SleepAction(.2),
                 robot.RestFromIn(),
 
                 b2,
                 robot.Bin(),
-                new SleepAction(.3),
+                new SleepAction(.5),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -187,5 +190,6 @@ public class BucketFivePushbot extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 FullAuto,
                 robot.RotateAlways()));
+        coords = robot.drive.pinpoint.getPositionRR();
     }
 }

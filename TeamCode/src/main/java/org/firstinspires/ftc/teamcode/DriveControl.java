@@ -19,28 +19,41 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wwall;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
-import static org.firstinspires.ftc.teamcode.VariablesDelay.LGREEN;
-import static org.firstinspires.ftc.teamcode.VariablesDelay.LRED;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.Lauto;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.Loff;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.RotateDelay;
-
-import com.arcrobotics.ftclib.controller.PIDController;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Drawing;
+import java.util.ArrayList;
+import java.util.List;
 
 @Config
 @TeleOp(name = "Driver Control 2025", group = "1")
 public class DriveControl extends  OpMode {
+
+
+    private List<Action> runningActions = new ArrayList<>();
+    private FtcDashboard dash = FtcDashboard.getInstance();
+
 
     public ElapsedTime clock = new ElapsedTime();
     public ElapsedTime light = new ElapsedTime();
@@ -48,9 +61,7 @@ public class DriveControl extends  OpMode {
 
     hwRobot hw = new hwRobot();
 
-    boolean a2Current = false;
-    boolean a2Last = false;
-    boolean a2Toggle = false;
+    boolean a2Current = false, a2Last = false, a2Toggle = false;
 
     boolean x1Current = false;
     boolean x1Last = false;
@@ -66,10 +77,18 @@ public class DriveControl extends  OpMode {
         WALL,
         IN,
         HANG,
-        HANG2
+        HANG2,
+        RESET
     }
 
     robot bobot = robot.REST;
+
+    public enum vroom{
+        AUTO,
+        MANUAL
+    }
+
+    vroom mode = vroom.MANUAL;
 
 
     @Override
@@ -87,7 +106,9 @@ public class DriveControl extends  OpMode {
         light.reset();
         liftClock.reset();
 
+
         hw.init(hardwareMap);
+        hw.drive.pinpoint.setPositionRR(coords);
 
     }
 
@@ -104,7 +125,6 @@ public class DriveControl extends  OpMode {
         boolean Bdelay = clock.milliseconds() > ButtonDelay;
         boolean RGB = light.milliseconds() > .01;
 
-        a2Current = gamepad2.a;
         double encoderVal = hw.armEncoder.getVoltage();
 
 //        a1Current = gamepad1.a;
@@ -135,6 +155,7 @@ public class DriveControl extends  OpMode {
 
         a2Last = a2Current;
 
+
         x1Current = gamepad1.x;
 
         if (x1Current && !x1Last){
@@ -142,7 +163,7 @@ public class DriveControl extends  OpMode {
         }
         if (x1Toggle){
             hw.spin.setPosition(Srest);
-            hw.Light.setPosition(LRED);
+//            hw.Light.setPosition(.28);
         }
         else {
             if (gamepad1.right_bumper){
@@ -151,12 +172,20 @@ public class DriveControl extends  OpMode {
             if (gamepad1.left_bumper){
                 hw.spin.setPosition(hw.spin.getPosition() - .08);
             }
-            hw.Light.setPosition(LGREEN);
+//            hw.Light.setPosition(LGREEN);
         }
 
         x1Last = x1Current;
 
-        if (gamepad2.x && gamepad2.y){
+        if (mode == vroom.AUTO){
+            hw.Light.setPosition(Lauto);
+        }
+        else {
+            hw.Light.setPosition(Loff);
+        }
+
+
+        if (gamepad2.x && gamepad2.b){
             hw.lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             hw.rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -170,7 +199,7 @@ public class DriveControl extends  OpMode {
 
                 if (gamepad2.dpad_up && Bdelay) {
 
-                    Bin();
+                    hw.rotation.RotateRest();
                     hw.lift.LiftBin();
                     liftClock.reset();
                     clock.reset();
@@ -201,11 +230,41 @@ public class DriveControl extends  OpMode {
                     bobot = robot.WALL;
 
                 }
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
+                }
+            break;
+            case RESET:
+
+                hw.lift.Move(gamepad2.right_trigger - gamepad2.left_trigger);
+
+                if (gamepad2.x && gamepad2.b){
+                    hw.lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    hw.rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    hw.rLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    hw.lLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                }
+
+                if (gamepad2.dpad_down && Bdelay) {
+
+                    hw.lift.LiftRest();
+                    liftClock.reset();
+                    clock.reset();
+                    Rest();
+                    bobot = robot.REST;
+
+                }
+
             break;
             case BIN:
-//                if (liftClock.milliseconds() > 500 && liftClock.milliseconds() < 2000){
-//                    hw.lift.LiftBin();
-//                }
+
+                if (hw.lLift.getCurrentPosition() >= 1300){
+                    Bin();
+                }
 
                 if (gamepad2.dpad_down && Bdelay) {
 
@@ -224,6 +283,13 @@ public class DriveControl extends  OpMode {
                     clock.reset();
                     bobot = robot.HANG;
 
+                }
+
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
                 }
                 break;
             case WALL:
@@ -258,6 +324,12 @@ public class DriveControl extends  OpMode {
                     bobot = robot.IN;
 
                 }
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
+                }
 
                 break;
             case BAR:
@@ -287,52 +359,48 @@ public class DriveControl extends  OpMode {
                     bobot = robot.IN;
 
                 }
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
+                }
                 break;
 //            case BAR2:
+            case HANG:
+
+                if (gamepad2.dpad_down && Bdelay){
+
+                    hw.lift.LiftRest();
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.REST;
+
+                }
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
+                }
+                break;
+//            case HANG2:
 //
-//                if (gamepad2.y && Bdelay){
+//                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 3000){
+//                    hw.lift.LiftHang2();
+//                }
 //
-//                    Rest();
+//                if (gamepad2.dpad_down && Bdelay){
+//
+//                    hw.lift.LiftRest();
 //                    liftClock.reset();
+//                    clock.reset();
+//                    Rest();
 //                    bobot = robot.REST;
 //
 //                }
-            case HANG:
-
-//                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 2000){
-//                    hw.lift.LiftHang1();
-//                }
-
-                if (gamepad2.dpad_down && Bdelay){
-
-                    hw.lift.LiftRest();
-                    liftClock.reset();
-                    clock.reset();
-                    bobot = robot.REST;
-
-                }
-                break;
-            case HANG2:
-
-                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 3000){
-                    hw.lift.LiftHang2();
-                }
-
-                if (gamepad2.dpad_down && Bdelay){
-
-                    hw.lift.LiftRest();
-                    liftClock.reset();
-                    clock.reset();
-                    Rest();
-                    bobot = robot.REST;
-
-                }
-                break;
+//                break;
             case IN:
-
-//                if (liftClock.milliseconds() > RotateDelay && liftClock.milliseconds() < 1000){
-//                    hw.lift.LiftIn();
-//                }
 
                 if (gamepad2.dpad_down && Bdelay){
 
@@ -353,49 +421,106 @@ public class DriveControl extends  OpMode {
                 else {
                     hw.arm.setPosition(Ain);
                 }
+
+                if (gamepad2.y && Bdelay){
+
+                    liftClock.reset();
+                    clock.reset();
+                    bobot = robot.RESET;
+                }
             break;
             default:
                 bobot = robot.REST;
         }
 
-        hw.drive.setDrivePowers(new PoseVelocity2d(
-                new Vector2d(
-                        -gamepad1.left_stick_y,
-                        -gamepad1.left_stick_x
-                ),
-                -gamepad1.right_stick_x
+        hw.rotation.loop();
+
+
+        TelemetryPacket packet = new TelemetryPacket();
+
+        switch (mode) {
+            case MANUAL:
+                hw.drive.setDrivePowers(new PoseVelocity2d(
+                        new Vector2d(
+                                -gamepad1.left_stick_y,
+                                -gamepad1.left_stick_x
+                        ),
+                        -gamepad1.right_stick_x
                 ));
+
+                if (gamepad1.y){
+                    mode = vroom.AUTO;
+                }
+                break;
+            case AUTO:
+
+                List<Action> newActions = new ArrayList<>();
+                for (Action action : runningActions) {
+                    action.preview(packet.fieldOverlay());
+                    if (action.run(packet)) {
+                        newActions.add(action);
+                    }
+            }
+                runningActions = newActions;
+
+                dash.sendTelemetryPacket(packet);
+
+                if (gamepad1.y) {
+
+                    TrajectoryActionBuilder drivetobucket = hw.drive.actionBuilder(hw.drive.pinpoint.getPositionRR())
+                            .strafeToLinearHeading(new Vector2d(-52, -49), Math.toRadians(45), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-40, 70))
+                            .endTrajectory();
+
+                    Action ToBucket = drivetobucket.build();
+
+
+                    runningActions.add(new SequentialAction(
+                            ToBucket,
+                            new InstantAction(() -> mode = vroom.MANUAL)
+                    ));
+
+                }
+
+                if (gamepad1.dpad_left){
+                    mode = vroom.MANUAL;
+                }
+
+
+                break;
+                default:
+                    mode = vroom.MANUAL;
+        }
 
         hw.drive.updatePoseEstimate();
 
 
-        hw.rotation.loop();
+        telemetry.addData("power ", rPower);
+        telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
+        telemetry.addData("armpos ", hw.arm.getPosition());
+        telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
+        telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
+        telemetry.addData("lift position", hw.lLift.getCurrentPosition());
+        telemetry.addData("bobot", bobot);
+        telemetry.addData("pos", hw.drive.pinpoint.getPositionRR());
 
-         telemetry.addData("power ", rPower);
-         telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
-
+        packet.fieldOverlay().setStroke("#3F51B5");
+        Drawing.drawRobot(packet.fieldOverlay(), hw.drive.pose);
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+//        telemetry.addData("power",hw.lLift.getPower());
+//        telemetry.addData("a2Toggle",a2Toggle);
 //        telemetry.addData("x", hw.drive.pose.position.x);
 //        telemetry.addData("y", hw.drive.pose.position.y);
 //        telemetry.addData("heading (deg)", Math.toDegrees(hw.drive.pose.heading.toDouble()));
 //        telemetry.addData("Encoder Voltage", encoderVal);
-        telemetry.addData("armpos ", hw.arm.getPosition());
-        telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
-        telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
-//        telemetry.addData("power",hw.lLift.getPower());
-//        telemetry.addData("a2Toggle",a2Toggle);
-
-
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.fieldOverlay().setStroke("#3F51B5");
-        Drawing.drawRobot(packet.fieldOverlay(), hw.drive.pose);
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
-
-        telemetry.addData("lift position", hw.lLift.getCurrentPosition());
 //        telemetry.addData("rotation", hw.rrotate.getPosition());
-        telemetry.addData("bobot", bobot);
 
         telemetry.update();
 
+        }
+
+        @Override
+        public void stop(){
+            coords = hw.drive.pinpoint.getPositionRR();
         }
 
         public void Rest(){
@@ -425,8 +550,6 @@ public class DriveControl extends  OpMode {
         public void Bar2(){
         hw.arm.setPosition(Abar2);
         hw.wrist.setPosition(Wbar2);
-//        hw.lrotate.setPosition(Rbar2);
-//        hw.rrotate.setPosition(Rbar2);
         }
 
         public void Intake(){
@@ -441,8 +564,8 @@ public class DriveControl extends  OpMode {
             hw.rotation.RotateHang();
         }
 
-        public void Hang2(){
-//        hw.rrotate.setPosition(Rhang2);
-//        hw.lrotate.setPosition(Rhang2);
-        }
+//        public void Hang2(){
+////        hw.rrotate.setPosition(Rhang2);
+////        hw.lrotate.setPosition(Rhang2);
+//        }
 }

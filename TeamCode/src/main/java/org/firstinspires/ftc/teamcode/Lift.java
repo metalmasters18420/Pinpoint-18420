@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lbar;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lbar2;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lbin;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lhang1;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lhang2;
@@ -8,6 +9,9 @@ import static org.firstinspires.ftc.teamcode.VariablesLift.Lin;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lin2;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lin3;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lslide1;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lslide2;
+import static org.firstinspires.ftc.teamcode.VariablesLift.Lslide3;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lspeed;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lwall;
 import static org.firstinspires.ftc.teamcode.VariablesLift.THING;
@@ -49,6 +53,10 @@ public class Lift {
         left.setTargetPosition(Lbar);
         right.setTargetPosition(Lbar);
     }
+    public void LiftBar2(){
+        left.setTargetPosition(Lbar2);
+        right.setTargetPosition(Lbar2);
+    }
     public void LiftWall(){
         left.setTargetPosition(Lwall);
         right.setTargetPosition(Lwall);
@@ -76,6 +84,18 @@ public class Lift {
     public void LiftIn3(){
         left.setTargetPosition(Lin3);
         right.setTargetPosition(Lin3);
+    }
+    public void LiftSlide1(){
+        left.setTargetPosition(Lslide1);
+        right.setTargetPosition(Lslide1);
+    }
+    public void LiftSlide2(){
+        left.setTargetPosition(Lslide2);
+        right.setTargetPosition(Lslide2);
+    }
+    public void LiftSlide3(){
+        left.setTargetPosition(Lslide3);
+        right.setTargetPosition(Lslide3);
     }
     public void Move(double y){
         left.setTargetPosition((int) (left.getCurrentPosition() + THING * -y));

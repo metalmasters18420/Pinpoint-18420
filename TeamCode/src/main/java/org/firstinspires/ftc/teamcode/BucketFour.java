@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -48,15 +50,10 @@ public class BucketFour extends LinearOpMode {
 
 
         TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
-                .strafeToSplineHeading(new Vector2d(-52, -49),Math.toRadians(45))
-                //.setTangent(-0.6556956)
-                //.lineToX(-53)
-                //.splineTo(new Vector2d(-56, -55),Math.toRadians(45))
-                //.turnTo(Math.toRadians(45))
-//                .waitSeconds(3)
+                .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .turnTo(Math.toRadians(79))
+                .turnTo(Math.toRadians(77))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))
@@ -73,9 +70,8 @@ public class BucketFour extends LinearOpMode {
         TrajectoryActionBuilder turntobinTHREE = leftsample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
-        TrajectoryActionBuilder drivetosubmerse = drivetobucket.fresh()
-                .strafeToSplineHeading(new Vector2d(-37, -7), Math.toRadians(180))
-                .strafeToConstantHeading(new Vector2d(-14, -7))
+        TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
+                .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -97,7 +93,7 @@ public class BucketFour extends LinearOpMode {
         Action FullAuto = new SequentialAction(
                 ToBucket,
                 robot.Bin(),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -107,7 +103,7 @@ public class BucketFour extends LinearOpMode {
                 robot.In(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.4),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
@@ -115,7 +111,7 @@ public class BucketFour extends LinearOpMode {
 
 
                 new ParallelAction(robot.Bin(), Turn1),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -125,14 +121,14 @@ public class BucketFour extends LinearOpMode {
                 robot.In2(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.4),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
                 new ParallelAction(robot.Bin(), Turn2),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -141,22 +137,19 @@ public class BucketFour extends LinearOpMode {
                 robot.In3(),
                 new SleepAction(0.4),
                 robot.Adown(),
-                new SleepAction(0.2),
+                new SleepAction(0.4),
                 robot.CC(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
                 new ParallelAction(robot.Bin(), Turn3),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
-                ToSubmerse,
-                robot.Aauto(),
-                robot.RRest(),
-                robot.WAuto(),
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto()),
                 new SleepAction(4)
         );
 
@@ -165,5 +158,9 @@ public class BucketFour extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(
                 FullAuto,
                 robot.RotateAlways()));
+
+        coords = robot.drive.pinpoint.getPositionRR();
+
+        telemetry.addData("pos", robot.drive.pinpoint.getPositionRR());
     }
 }

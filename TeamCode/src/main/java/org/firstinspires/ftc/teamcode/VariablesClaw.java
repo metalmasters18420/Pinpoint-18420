@@ -11,13 +11,15 @@ public class VariablesClaw {
 
     public static double Sin3 = .75;
     public static double Srest = .5;
+    public static double Sslide1 = .5;
+    public static double Sslide2 = .5;
+    public static double Sslide3 = .5;
 
     public static double Wauto = .5;
     public static double Wbar = .6;
     public static double Wbar2 = .2;
     public static double Wbin = .55;
     public static double Win = .03;
-    public static double Wpark = .8;
     public static double Wrest = .2;
     public static double Wwall = .37;
 

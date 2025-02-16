@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.Rotation.degree_per_volt;
 import static org.firstinspires.ftc.teamcode.Rotation.offset;
 import static org.firstinspires.ftc.teamcode.Rotation.target;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Aauto;
+import static org.firstinspires.ftc.teamcode.VariablesArm.Abar;
+import static org.firstinspires.ftc.teamcode.VariablesArm.Abar2;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Abin;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Adown;
 import static org.firstinspires.ftc.teamcode.VariablesArm.Ain;
@@ -14,13 +16,18 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Cclose;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Copen;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Sin3;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Srest;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Sslide1;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Sslide2;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Sslide3;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wauto;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbar;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbar2;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbin;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
-import static org.firstinspires.ftc.teamcode.VariablesLift.Lin2;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbin;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar2;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 //import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Rotate
@@ -39,12 +46,8 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.internal.stellaris.FlashLoaderResetCommand;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
 // intake voltage: .098
@@ -97,17 +100,17 @@ public class hwRobot {
 
         Light.setPosition(.277);
 
-        claw.setPosition(Cclose);
         claw.setDirection(Servo.Direction.REVERSE);
+        claw.setPosition(Cclose);
 
-        wrist.setPosition(Win);
         wrist.setDirection(Servo.Direction.FORWARD);
+        wrist.setPosition(Win);
 
-        spin.setPosition(Srest);
         spin.setDirection(Servo.Direction.FORWARD);
+        spin.setPosition(Srest);
 
-        arm.setPosition(Arest);
         arm.setDirection(Servo.Direction.FORWARD);
+        arm.setPosition(Arest);
 
         lift = new Lift(lLift,rLift);
             lLift.setTargetPosition(Lrest);
@@ -251,6 +254,23 @@ public class hwRobot {
     public Action LIn2(){return new InstantAction(()->lift.LiftIn2());}
     public Action LIn3(){return new InstantAction(()->lift.LiftIn3());}
     public Action LRest(){return new InstantAction(()->lift.LiftRest());}
+    public Action ABar1(){return new MoveArm(Abar);}
+    public Action WBar1(){return new MoveWrist(Wbar);}
+    public Action Rbar1(){return new Rotate(Rbar);}
+    public Action LBar1(){return new InstantAction(() -> lift.LiftBar());}
+    public Action ABar2(){return new MoveArm(Abar2);}
+    public Action WBar2(){return new MoveWrist(Wbar2);}
+    public Action RBar2(){return new Rotate(Rbar2);}
+    public Action LBar2(){return new InstantAction(() -> lift.LiftBar2());}
+
+    public Action LSlide1(){return new InstantAction(() -> lift.LiftSlide1());}
+    public Action LSlide2(){return new InstantAction(() -> lift.LiftSlide2());}
+    public Action LSlide3(){return new InstantAction(() -> lift.LiftSlide3());}
+
+    public Action SSlide1(){return new MoveSpin(Sslide1);}
+    public Action SSlide2(){return new MoveSpin(Sslide2);}
+    public Action SSlide3(){return new MoveSpin(Sslide3);}
+
 
 
 
@@ -312,6 +332,54 @@ public class hwRobot {
                 Sin3(),
 //                new SleepAction(.5),
                 LIn3()
+        );
+    }
+
+    public Action Bar1(){
+        return new SequentialAction(
+                ABar1(),
+                WBar1(),
+                Rbar1(),
+                LBar1()
+        );
+    }
+
+    public Action Bar2(){
+        return new SequentialAction(
+                ABar2(),
+                WBar2(),
+                RBar2(),
+                LBar2()
+        );
+    }
+
+    public Action Slide1(){
+        return new SequentialAction(
+                AIn(),
+                WIn(),
+                RIn(),
+                SSlide1(),
+                LSlide1()
+        );
+    }
+
+    public Action Slide2(){
+        return new SequentialAction(
+                AIn(),
+                WIn(),
+                RIn(),
+                SSlide2(),
+                LSlide2()
+        );
+    }
+
+    public Action Slide3(){
+        return new SequentialAction(
+                AIn(),
+                WIn(),
+                RIn(),
+                SSlide3(),
+                LSlide3()
         );
     }
 }

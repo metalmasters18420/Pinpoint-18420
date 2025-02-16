@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
@@ -48,8 +50,6 @@ public class BucketFiveHerberger extends LinearOpMode {
 
         robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
 
-
-
         TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
@@ -66,19 +66,19 @@ public class BucketFiveHerberger extends LinearOpMode {
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder middlesample = turntobinONE.fresh()
-                .turnTo(Math.toRadians(97))
+                .turnTo(Math.toRadians(99))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTWO = middlesample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder leftsample = turntobinTWO.fresh()
-                .turnTo(Math.toRadians(117))
+                .turnTo(Math.toRadians(119))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinTHREE = leftsample.fresh()
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
-                .strafeToLinearHeading(new Vector2d(-14, 0), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -181,6 +181,7 @@ public class BucketFiveHerberger extends LinearOpMode {
                 new SleepAction(4)
         );
 
+
         waitForStart();
 
         Actions.runBlocking(new ParallelAction(
@@ -188,5 +189,7 @@ public class BucketFiveHerberger extends LinearOpMode {
                 robot.RotateAlways()
                 )
         );
+
+        coords = robot.drive.pinpoint.getPositionRR();
     }
 }
