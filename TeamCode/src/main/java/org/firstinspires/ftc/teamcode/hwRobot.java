@@ -25,6 +25,11 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbar2;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbin;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.Wwall;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.green;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.red;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar2;
@@ -187,6 +192,19 @@ public class hwRobot {
         }
     }
 
+    public class LightUp implements Action{
+        double c;
+        public LightUp(double c) {
+            this.c = c;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            Light.setPosition(c);
+            return false;
+        }
+    }
+
     public class Rotate implements Action{
         double t;
         public Rotate(double t) {this.t = t;}
@@ -271,6 +289,15 @@ public class hwRobot {
     public Action SSlide2(){return new MoveSpin(Sslide2);}
     public Action SSlide3(){return new MoveSpin(Sslide3);}
 
+    public Action AWall(){return new MoveArm(Awall);}
+    public Action WWall(){return new MoveWrist(Wwall);}
+
+    public Action Red(){return new LightUp(red);}
+    public Action Green(){return new LightUp(green);}
+    public Action Pink(){return new LightUp(pink);}
+    public Action Off(){return new LightUp(off);}
+
+
 
 
 
@@ -353,33 +380,14 @@ public class hwRobot {
         );
     }
 
-    public Action Slide1(){
+    public Action Wall(){
         return new SequentialAction(
-                AIn(),
-                WIn(),
-                RIn(),
-                SSlide1(),
-                LSlide1()
-        );
-    }
+                AWall(),
+                WWall(),
+                RRest(),
+                LRest()
 
-    public Action Slide2(){
-        return new SequentialAction(
-                AIn(),
-                WIn(),
-                RIn(),
-                SSlide2(),
-                LSlide2()
-        );
-    }
 
-    public Action Slide3(){
-        return new SequentialAction(
-                AIn(),
-                WIn(),
-                RIn(),
-                SSlide3(),
-                LSlide3()
         );
     }
 }

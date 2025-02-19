@@ -54,7 +54,7 @@ public class BucketFivePushbot extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .turnTo(Math.toRadians(77.5))
+                .turnTo(Math.toRadians(79))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))
@@ -103,84 +103,100 @@ public class BucketFivePushbot extends LinearOpMode {
 
         Action FullAuto = new SequentialAction(
 
-                ToBucket,
-                robot.Bin(),
+                new ParallelAction(ToBucket, robot.Pink()),
+                new ParallelAction(robot.Bin(), robot.Green()),
                 new SleepAction(.5),
                 robot.CO(),
+                robot.Off(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
 
-                ToRS,
+                new ParallelAction(ToRS, robot.Pink()),
+                robot.Off(),
                 robot.In(),
                 new SleepAction(0.4),
                 robot.Adown(),
                 new SleepAction(0.3),
                 robot.CC(),
+                robot.Green(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
 
-                new ParallelAction(robot.Bin(), Turn1),
+                new ParallelAction(robot.Bin(), Turn1, robot.Pink()),
+                robot.Green(),
                 new SleepAction(.5),
                 robot.CO(),
+                robot.Off(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
 
-                ToMS,
+                new ParallelAction(ToMS, robot.Pink()),
+                robot.Off(),
                 robot.In2(),
                 new SleepAction(0.4),
                 robot.Adown(),
                 new SleepAction(0.3),
                 robot.CC(),
+                robot.Green(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
-                new ParallelAction(robot.Bin(), Turn2),
+                new ParallelAction(robot.Bin(), Turn2, robot.Pink()),
+                robot.Green(),
                 new SleepAction(.5),
                 robot.CO(),
+                robot.Off(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
 
-                ToLS,
+                new ParallelAction(ToLS, robot.Pink()),
+                robot.Off(),
                 robot.In3(),
                 new SleepAction(0.4),
                 robot.Adown(),
                 new SleepAction(0.3),
                 robot.CC(),
+                robot.Green(),
                 new SleepAction(0.2),
                 robot.RestFromIn(),
 
 
-                new ParallelAction(robot.Bin(), Turn3),
+                new ParallelAction(robot.Bin(), Turn3, robot.Pink()),
+                robot.Green(),
                 new SleepAction(.5),
                 robot.CO(),
+                robot.Off(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
 
-
-                s5,
+                new ParallelAction(s5, robot.Pink()),
+                robot.Off(),
                 new ParallelAction(robot.AIn(), robot.WIn(), robot.RIn()),
                 new SleepAction(.4),
                 robot.Adown(),
                 new SleepAction(.3),
                 robot.CC(),
+                robot.Green(),
                 new SleepAction(.2),
                 robot.RestFromIn(),
 
-                b2,
+                new ParallelAction(b2, robot.Pink()),
+                robot.Green(),
                 robot.Bin(),
                 new SleepAction(.5),
                 robot.CO(),
+                robot.Off(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
-                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto()),
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto(), robot.Pink()),
                 new SleepAction(4)
         );
 

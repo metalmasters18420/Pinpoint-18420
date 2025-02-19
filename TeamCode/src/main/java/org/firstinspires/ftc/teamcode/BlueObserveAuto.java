@@ -22,132 +22,175 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 @Autonomous(name="OAuto", group = "Observe")
 public class BlueObserveAuto extends LinearOpMode {
 
-    public static double ZOOM = 40;
+    public static double ZOOM = 65;
+    public static double depth = -62;
 
     @Override
     public void runOpMode() {
-        // Pose2d RedBucketPose = new Pose2d(12, -60, Math.toRadians(90));
-        //Pose2d RedObservePose = new Pose2d(-18, -60, Math.toRadians(90));
-        //Pose2d BlueBucketPose = new Pose2d(12, 60, Math.toRadians(-90));
-        Pose2d BlueObservePose = new Pose2d(8, -60, Math.toRadians(270));
-
-
 
         hwRobot robot = new hwRobot();
-
 
         robot.init(hardwareMap);
         robot.RRest();
 
-        robot.drive.pose = new Pose2d(8,-60,Math.toRadians(270));
+        robot.drive.pose = new Pose2d(8,-64,Math.toRadians(270));
 
-        TrajectoryActionBuilder DriveToSubmersible = robot.drive.actionBuilder(new Pose2d(8, -60, Math.toRadians(270)))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(0,-25),Math.toRadians(270), new TranslationalVelConstraint(ZOOM))
+        TrajectoryActionBuilder DriveToSubmersible = robot.drive.actionBuilder(new Pose2d(8, -64, Math.toRadians(270)))
+                .strafeToConstantHeading(new Vector2d(0,-24))
                 .endTrajectory();
 
-        TrajectoryActionBuilder Pushy = DriveToSubmersible.fresh()//.setTangent(Math.toRadians(180))
-                .setTangent(Math.toRadians(-45))
-                .splineToConstantHeading(new Vector2d(33,-30),Math.toRadians(90), new TranslationalVelConstraint(ZOOM))
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(40,-12), Math.toRadians(0), new TranslationalVelConstraint(ZOOM))
-                .setTangent(0)
-                .splineToConstantHeading(new Vector2d(48,-24), Math.toRadians(-90), new TranslationalVelConstraint(ZOOM))
-                .lineToY(-44)
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(49,-12), Math.toRadians(0), new TranslationalVelConstraint(ZOOM))
-                .splineToConstantHeading(new Vector2d(57,-24), Math.toRadians(-90),new TranslationalVelConstraint(ZOOM))
-                .setTangent(Math.toRadians(-90))
-                .lineToY(-44)
-                .setTangent(Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(59,-12), Math.toRadians(0), new TranslationalVelConstraint(ZOOM))
-                .splineToConstantHeading(new Vector2d(67,-24), Math.toRadians(-90), new TranslationalVelConstraint(ZOOM))
-                .setTangent(Math.toRadians(-90))
-                .lineToY(-44)
+        TrajectoryActionBuilder Pushy = DriveToSubmersible.fresh()
+                //move around submersible
+                .strafeToConstantHeading(new Vector2d(33,-30), new TranslationalVelConstraint(ZOOM))
+                //get into position
+                .strafeToConstantHeading(new Vector2d(40,-14), new TranslationalVelConstraint(ZOOM))
+                .strafeToConstantHeading(new Vector2d(46,-14), new TranslationalVelConstraint(ZOOM))
+                //push first sample
+                .strafeToConstantHeading(new Vector2d(44,-54), new TranslationalVelConstraint(ZOOM))
+                //back up
+                .strafeToConstantHeading(new Vector2d(48,-14), new TranslationalVelConstraint(ZOOM))
+                .strafeToConstantHeading(new Vector2d(56,-14), new TranslationalVelConstraint(ZOOM))
+                //push second sample
+                .strafeToConstantHeading(new Vector2d(56,-56), new TranslationalVelConstraint(ZOOM))
+
                 .endTrajectory();
 
-//        TrajectoryActionBuilder Deposit2 = Push3.fresh()//.setTangent(Math.toRadians(180))
-//                .strafeToLinearHeading(new Vector2d(53,-42),Math.toRadians(-45))
-//                .endTrajectory();
-//
-//        TrajectoryActionBuilder TurnObserve3 = Deposit2.fresh()
-//                .turnTo(Math.toRadians(-40));
-//
-//        TrajectoryActionBuilder Drivewall = TurnObserve3.fresh()//.setTangent(Math.toRadians(180))
-//                .strafeToSplineHeading(new Vector2d(62, -40),Math.toRadians(90))
-//                .setTangent(Math.toRadians(90));
-////                .lineToY(SHALLOW_END_POINT_RED.y);
-//
-//        TrajectoryActionBuilder Scorespecimen1 = Drivewall.fresh()//.setTangent(Math.toRadians(180))
-//                .strafeToSplineHeading(new Vector2d(11,-40),Math.toRadians(270))
-//                .setTangent(Math.toRadians(130))
-//                .lineToY(-32.5);
-//
-//        TrajectoryActionBuilder Scorespecimen2 = Scorespecimen1.fresh()//.setTangent(Math.toRadians(180))
-//                .strafeToSplineHeading(new Vector2d(62, -60),Math.toRadians(90))
-//                .strafeToSplineHeading(new Vector2d(11,-40),Math.toRadians(270))
-//                .setTangent(Math.toRadians(140))
-//                .lineToY(-32.5);
-//
-//        TrajectoryActionBuilder Scorespecimen3 = Scorespecimen2.fresh()//.setTangent(Math.toRadians(180))
-//                .strafeToSplineHeading(new Vector2d(62, -60),Math.toRadians(90))
-//                .strafeToSplineHeading(new Vector2d(11,-40),Math.toRadians(270))
-//                .setTangent(Math.toRadians(150))
-//                .lineToY(-32.5);
+        TrajectoryActionBuilder alignWall1 = Pushy.fresh()
+                //go forward a bit to intake sample
+                .strafeToConstantHeading(new Vector2d(56,depth))
+                .endTrajectory();
+
+        TrajectoryActionBuilder cycle1 = alignWall1.fresh()
+                //go to submersible a little to the right of the preload
+                .strafeToConstantHeading(new Vector2d(6,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder shift1 = cycle1.fresh()
+                //move the specs over!
+                .strafeToConstantHeading(new Vector2d(2,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder alignWall2 = shift1.fresh()
+                //go back to wall
+                .strafeToConstantHeading(new Vector2d(36,depth))
+                .endTrajectory();
+
+        TrajectoryActionBuilder cycle2 = alignWall2.fresh()
+                //go to submersible
+                .strafeToConstantHeading(new Vector2d(6,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder shift2 = cycle2.fresh()
+                //move the specs over!
+                .strafeToConstantHeading(new Vector2d(2,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder alignWall3 = shift2.fresh()
+                //go back to wall
+                .strafeToConstantHeading(new Vector2d(36,depth))
+                .endTrajectory();
+
+        TrajectoryActionBuilder cycle3 = alignWall3.fresh()
+                //go to submersible
+                .strafeToConstantHeading(new Vector2d(6,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder shift3 = cycle3.fresh()
+                //move the specs over!
+                .strafeToConstantHeading(new Vector2d(2,-24))
+                .endTrajectory();
+
+        TrajectoryActionBuilder ending = shift3.fresh()
+                //go to observation zone
+                .strafeToConstantHeading(new Vector2d(36,depth))
+                .endTrajectory();
 
         Action ToSubmerse = DriveToSubmersible.build();
 
         Action P = Pushy.build();
 
-//        Action RS = ReadySpin.build();
-//
-//        Action P1 = Push1.build();
-//
-//        Action P2 = Push2.build();
-//
-//        Action P3 = Push3.build();
+        Action align1 = alignWall1.build();
 
-//        Action D2 = Deposit2.build();
+        Action score1 = cycle1.build();
+
+        Action move1 = shift1.build();
+
+        Action align2 = alignWall2.build();
+
+        Action score2 = cycle2.build();
+
+        Action move2 = shift2.build();
+
+        Action align3 = alignWall3.build();
+
+        Action score3 = cycle3.build();
+
+        Action move3 = shift3.build();
+
+        Action park = ending.build();
 
         Action FullAuto = new SequentialAction(
 
+                //preload cycle
                 new ParallelAction(ToSubmerse, new SequentialAction(new SleepAction(.5), robot.Bar1())),
-                new SleepAction(.3),
+                new SleepAction(.1),
                 robot.Bar2(),
                 new SleepAction(.3),
                 robot.CO(),
-                new SleepAction(.1),
-                robot.Rest(),
-                P,
 
-//                new ParallelAction(RS,  new SequentialAction(new SleepAction(.2), robot.CO())),
-//                RS,
-//                P1,
-//                P2,
-//                P3,
+                //go push!
+                new ParallelAction(P, robot.Wall()),
 
-                new SleepAction(10),
-                robot.Slide1(),
-                new SleepAction(.1),
-                robot.Adown(),
-                new SleepAction(.3),
+                //pick up #1
+                align1,
+                new SleepAction(.25),
                 robot.CC(),
-                new SleepAction(.2),
+                new SleepAction(.25),
 
-//                new ParallelAction(P2, robot.AIn()),
+                //make it clear the wall
+                robot.ARest(),
 
-                new ParallelAction(robot.CO(), robot.Slide2()),
-
-//                P3,
+                //score #1
+                new ParallelAction(score1, new SequentialAction(new SleepAction(.5), robot.Bar1())),
                 new SleepAction(.1),
-                robot.Adown(),
-                new SleepAction(.3),
+                new ParallelAction(robot.Bar2(), move1),
+                robot.CO(),
+
+                //pick up #2
+                robot.Wall(),
+                align2,
+                new SleepAction(.25),
                 robot.CC(),
-                new SleepAction(.2),
+                new SleepAction(.25),
 
-//                new ParallelAction(D2, robot.AIn()),
+                //make it clear the wall
+                robot.ARest(),
 
-                new ParallelAction(robot.CO(), robot.Slide3())
+                //score #2
+                new ParallelAction(score2, new SequentialAction(new SleepAction(.5), robot.Bar1())),
+                new SleepAction(.1),
+                new ParallelAction(robot.Bar2(), move2),
+                robot.CO(),
+
+                //pick up #3
+                robot.Wall(),
+                align3,
+                new SleepAction(.25),
+                robot.CC(),
+                new SleepAction(.25),
+
+                //make it clear the wall
+                robot.ARest(),
+
+                //score #3
+                new ParallelAction(score3, new SequentialAction(new SleepAction(.5), robot.Bar1())),
+                new SleepAction(.1),
+                new ParallelAction(robot.Bar2(), move3),
+                robot.CO(),
+
+                //go park bozo
+                new ParallelAction(park, new SequentialAction(new SleepAction(.2), robot.Rest()))
+
 
         );
 

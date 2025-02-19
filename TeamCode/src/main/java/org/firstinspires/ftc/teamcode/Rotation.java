@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang;
+import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang2;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rwall;
@@ -75,6 +76,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
            target = Rhang + offset;
         }
 
+        public void RotateHang2(){
+           target = Rhang2 + offset;
+        }
 
 //    ElapsedTime timer = new ElapsedTime();
 //    public DcMotor Rotate;
