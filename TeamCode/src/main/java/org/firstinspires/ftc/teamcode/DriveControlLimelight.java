@@ -19,11 +19,10 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wwall;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.ButtonDelay;
-import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
-import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
-import static org.firstinspires.ftc.teamcode.VariablesDelay.red;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
-import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang2;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
+import static org.firstinspires.ftc.teamcode.VariablesDelay.red;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -37,21 +36,28 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Config
-@TeleOp(name = "Driver Control 2025", group = "1")
-public class DriveControl extends  OpMode {
+@TeleOp(name = "Driver Control 2025 LIMEY", group = "1")
+public class DriveControlLimelight extends  OpMode {
 
 
     private List<Action> runningActions = new ArrayList<>();
     private FtcDashboard dash = FtcDashboard.getInstance();
+    public Limelight3A limelight;
 
 
     public ElapsedTime clock = new ElapsedTime();
@@ -95,7 +101,15 @@ public class DriveControl extends  OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         telemetry.addData("Status", "Initialized");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        telemetry.setMsTransmissionInterval(11);
 
+        limelight.pipelineSwitch(2);
+
+        /*
+         * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
+         */
+        limelight.start();
     }
 
     public void start() {
@@ -490,6 +504,71 @@ public class DriveControl extends  OpMode {
 
         hw.drive.updatePoseEstimate();
 
+        //BEGIN LIMELIGHT
+
+        LLStatus status = limelight.getStatus();
+        telemetry.addData("Name", "%s",
+                status.getName());
+        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+                status.getTemp(), status.getCpu(),(int)status.getFps());
+        telemetry.addData("Pipeline", "Index: %d, Type: %s",
+                status.getPipelineIndex(), status.getPipelineType());
+
+        LLResult result = limelight.getLatestResult();
+        if (result != null) {
+            // Access general information
+            Pose3D botpose = result.getBotpose();
+            double captureLatency = result.getCaptureLatency();
+            double targetingLatency = result.getTargetingLatency();
+            double parseLatency = result.getParseLatency();
+            telemetry.addData("LL Latency", captureLatency + targetingLatency);
+            telemetry.addData("Parse Latency", parseLatency);
+            telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+
+            if (result.isValid()) {
+                telemetry.addData("tx", result.getTx());
+                telemetry.addData("txnc", result.getTxNC());
+                telemetry.addData("ty", result.getTy());
+                telemetry.addData("tync", result.getTyNC());
+
+                telemetry.addData("Botpose", botpose.toString());
+
+                // Access barcode results
+                List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
+                for (LLResultTypes.BarcodeResult br : barcodeResults) {
+                    telemetry.addData("Barcode", "Data: %s", br.getData());
+                }
+
+                // Access classifier results
+                List<LLResultTypes.ClassifierResult> classifierResults = result.getClassifierResults();
+                for (LLResultTypes.ClassifierResult cr : classifierResults) {
+                    telemetry.addData("Classifier", "Class: %s, Confidence: %.2f", cr.getClassName(), cr.getConfidence());
+                }
+
+                // Access detector results
+                List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
+                for (LLResultTypes.DetectorResult dr : detectorResults) {
+                    telemetry.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
+                }
+
+                // Access fiducial results
+                List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+                for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                    telemetry.addData("Fiducial", "ID: %d, Family: %s, X: %.2f, Y: %.2f", fr.getFiducialId(), fr.getFamily(),fr.getTargetXDegrees(), fr.getTargetYDegrees());
+                }
+
+                // Access color results
+                List<LLResultTypes.ColorResult> colorResults = result.getColorResults();
+                for (LLResultTypes.ColorResult cr : colorResults) {
+                    telemetry.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
+                }
+            }
+        } else {
+            telemetry.addData("Limelight", "No data available");
+        }
+
+
+        //END LIMELIGHT
 
         telemetry.addData("power ", rPower);
         telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
@@ -500,6 +579,8 @@ public class DriveControl extends  OpMode {
         telemetry.addData("bobot", bobot);
         telemetry.addData("pos", hw.drive.pinpoint.getPositionRR());
         telemetry.addData("Wrist ", hw.wrist.getPosition());
+
+
 
 
         packet.fieldOverlay().setStroke("#3F51B5");

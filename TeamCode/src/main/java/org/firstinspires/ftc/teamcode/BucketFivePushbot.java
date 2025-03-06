@@ -46,11 +46,11 @@ public class BucketFivePushbot extends LinearOpMode {
         robot.RRest();
 
 
-        robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
+        robot.drive.pose = new Pose2d(-39,-60,Math.toRadians(0));
 
 
 
-        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
+        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-39, -60, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
@@ -78,6 +78,7 @@ public class BucketFivePushbot extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = drivetobucket2.fresh()
+                .strafeToLinearHeading(new Vector2d(-20, 10), Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
                 .endTrajectory();
 
@@ -196,8 +197,7 @@ public class BucketFivePushbot extends LinearOpMode {
                 new SleepAction(0.2),
                 robot.Rest(),
 
-                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto(), robot.Pink()),
-                new SleepAction(4)
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto(), robot.Pink())
         );
 
 

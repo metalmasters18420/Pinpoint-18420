@@ -4,7 +4,6 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -48,19 +47,19 @@ public class BucketFiveHerberger extends LinearOpMode {
         robot.RRest();
 
 
-        robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
+        robot.drive.pose = new Pose2d(-39,-60,Math.toRadians(0));
 
-        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
+        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-39, -60, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder fifth = drivetobucket.fresh()
-                .strafeToLinearHeading(new Vector2d(14, -60), Math.toRadians(0))
+                .strafeToLinearHeading(new Vector2d(14, -63), Math.toRadians(0))
                 .endTrajectory();
         TrajectoryActionBuilder drivetobucket2 = fifth.fresh()
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket2.fresh()
-                .turnTo(Math.toRadians(77))
+                .turnTo(Math.toRadians(78))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))
@@ -78,7 +77,8 @@ public class BucketFiveHerberger extends LinearOpMode {
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
-                .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-16, 12), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-14, 12), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -102,15 +102,17 @@ public class BucketFiveHerberger extends LinearOpMode {
         Action ToSubmerse = drivetosubmerse.build();
 
         Action FullAuto = new SequentialAction(
+                robot.LRest(),
                 ToBucket,
                 robot.Bin(),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
                 s5,
                 robot.In(),
+                robot.S90(),
                 new SleepAction(.4),
                 robot.Adown(),
                 new SleepAction(.2),
@@ -120,7 +122,7 @@ public class BucketFiveHerberger extends LinearOpMode {
 
                 b2,
                 robot.Bin(),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -137,7 +139,7 @@ public class BucketFiveHerberger extends LinearOpMode {
 
 
                 new ParallelAction(robot.Bin(), Turn1),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -154,7 +156,7 @@ public class BucketFiveHerberger extends LinearOpMode {
 
 
                 new ParallelAction(robot.Bin(), Turn2),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
@@ -171,14 +173,13 @@ public class BucketFiveHerberger extends LinearOpMode {
 
 
                 new ParallelAction(robot.Bin(), Turn3),
-                new SleepAction(.3),
+                new SleepAction(.4),
                 robot.CO(),
                 new SleepAction(0.2),
                 robot.Rest(),
 
 
-                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto()),
-                new SleepAction(4)
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto())
         );
 
 

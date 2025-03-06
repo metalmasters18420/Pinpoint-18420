@@ -26,6 +26,7 @@ import static org.firstinspires.ftc.teamcode.VariablesClaw.Wbin;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Win;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wrest;
 import static org.firstinspires.ftc.teamcode.VariablesClaw.Wwall;
+import static org.firstinspires.ftc.teamcode.VariablesClaw.s90;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.green;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
@@ -47,6 +48,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -68,9 +70,6 @@ public class hwRobot {
     public DcMotor lLift = null;
     public DcMotor rLift = null;
     public DcMotorEx Rotate = null;
-
-    public Servo rrotate = null;
-    public Servo lrotate = null;
 
     public Servo claw = null;
     public Servo wrist = null;
@@ -100,6 +99,7 @@ public class hwRobot {
         wrist = hm.get(Servo.class, "W"); //CH2
         arm = hm.get(Servo.class, "A"); //CH4
         spin = hm.get(Servo.class, "S"); //CH1
+//        lime = hm.get(Limelight3A.class, "cam"); //USB2
 
         drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
 
@@ -297,7 +297,7 @@ public class hwRobot {
     public Action Pink(){return new LightUp(pink);}
     public Action Off(){return new LightUp(off);}
 
-
+    public Action S90(){return new MoveSpin(s90);}
 
 
 

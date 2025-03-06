@@ -45,15 +45,15 @@ public class BucketFour extends LinearOpMode {
         robot.RRest();
 
 
-        robot.drive.pose = new Pose2d(-40,-60,Math.toRadians(0));
+        robot.drive.pose = new Pose2d(-39,-60,Math.toRadians(0));
 
 
 
-        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-40, -60, Math.toRadians(0)))
+        TrajectoryActionBuilder drivetobucket = robot.drive.actionBuilder(new Pose2d(-39, -60, Math.toRadians(0)))
                 .strafeToLinearHeading(new Vector2d(-52, -49),Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder rightsample = drivetobucket.fresh()
-                .turnTo(Math.toRadians(77))
+                .turnTo(Math.toRadians(79))
                 .endTrajectory();
         TrajectoryActionBuilder turntobinONE = rightsample.fresh()
                 .turnTo(Math.toRadians(45))
@@ -71,7 +71,8 @@ public class BucketFour extends LinearOpMode {
                 .turnTo(Math.toRadians(45))
                 .endTrajectory();
         TrajectoryActionBuilder drivetosubmerse = turntobinTHREE.fresh()
-                .strafeToLinearHeading(new Vector2d(-14, 10), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-28, -8), Math.toRadians(180))
+                .strafeToLinearHeading(new Vector2d(-12, -8), Math.toRadians(180))
                 .endTrajectory();
 
         Action ToBucket = drivetobucket.build();
@@ -149,8 +150,7 @@ public class BucketFour extends LinearOpMode {
                 new SleepAction(0.2),
                 robot.Rest(),
 
-                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto()),
-                new SleepAction(4)
+                new ParallelAction(ToSubmerse, robot.Aauto(), robot.RRest(), robot.WAuto())
         );
 
         waitForStart();
