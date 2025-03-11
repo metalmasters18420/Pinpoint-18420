@@ -95,13 +95,22 @@ public class DriveControlLimelight extends  OpMode {
 
     vroom mode = vroom.MANUAL;
 
+    public enum camera{
+        NONE,
+        YELLOW,
+        BLUE,
+        RED
+    }
+
+    camera color = camera.NONE;
+
 
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         telemetry.addData("Status", "Initialized");
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight = hardwareMap.get(Limelight3A.class, "cam");
         telemetry.setMsTransmissionInterval(11);
 
         limelight.pipelineSwitch(2);
@@ -191,6 +200,27 @@ public class DriveControlLimelight extends  OpMode {
         if (gamepad2.x && gamepad2.b){
             hw.lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             hw.rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+        switch (color) {
+            case NONE:
+
+                if (gamepad1.y){
+                    limelight.pipelineSwitch(0);
+                    color = camera.YELLOW;
+                }
+
+                if (gamepad1.x){
+                    color = camera.BLUE;
+                }
+
+                if (gamepad1.b){
+                    color = camera.RED;
+                }
+            break;
+            case YELLOW:
+
+                limelight.pipelineSwitch(0);
         }
 
         switch (bobot) {
@@ -461,7 +491,7 @@ public class DriveControlLimelight extends  OpMode {
                         -gamepad1.right_stick_x
                 ));
 
-                if (gamepad1.y){
+                if (gamepad1.dpad_up){
                     mode = vroom.AUTO;
                 }
                 break;
@@ -478,7 +508,7 @@ public class DriveControlLimelight extends  OpMode {
 
                 dash.sendTelemetryPacket(packet);
 
-                if (gamepad1.y) {
+                if (gamepad1.dpad_up) {
 
                     TrajectoryActionBuilder drivetobucket = hw.drive.actionBuilder(hw.drive.pinpoint.getPositionRR())
                             .strafeToLinearHeading(new Vector2d(-52, -49), Math.toRadians(45), new TranslationalVelConstraint(70), new ProfileAccelConstraint(-40, 70))
@@ -570,15 +600,15 @@ public class DriveControlLimelight extends  OpMode {
 
         //END LIMELIGHT
 
-        telemetry.addData("power ", rPower);
-        telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
-        telemetry.addData("armpos ", hw.arm.getPosition());
-        telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
-        telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
-        telemetry.addData("lift position", hw.lLift.getCurrentPosition());
-        telemetry.addData("bobot", bobot);
-        telemetry.addData("pos", hw.drive.pinpoint.getPositionRR());
-        telemetry.addData("Wrist ", hw.wrist.getPosition());
+//        telemetry.addData("power ", rPower);
+//        telemetry.addData("rotation ", hw.rotation.ELC.getVoltage() * degree_per_volt);
+//        telemetry.addData("armpos ", hw.arm.getPosition());
+//        telemetry.addData("leftTarget",hw.lLift.getTargetPosition());
+//        telemetry.addData("rightTarget",hw.rLift.getTargetPosition());
+//        telemetry.addData("lift position", hw.lLift.getCurrentPosition());
+//        telemetry.addData("bobot", bobot);
+//        telemetry.addData("pos", hw.drive.pinpoint.getPositionRR());
+//        telemetry.addData("Wrist ", hw.wrist.getPosition());
 
 
 

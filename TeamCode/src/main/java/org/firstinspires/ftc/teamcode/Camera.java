@@ -74,7 +74,7 @@ public class Camera extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException
     {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight = hardwareMap.get(Limelight3A.class, "cam");
 
         telemetry.setMsTransmissionInterval(11);
 
@@ -99,23 +99,23 @@ public class Camera extends LinearOpMode {
                     status.getPipelineIndex(), status.getPipelineType());
 
             LLResult result = limelight.getLatestResult();
-            if (result != null) {
+//            if (result != null) {
                 // Access general information
-                Pose3D botpose = result.getBotpose();
-                double captureLatency = result.getCaptureLatency();
-                double targetingLatency = result.getTargetingLatency();
-                double parseLatency = result.getParseLatency();
-                telemetry.addData("LL Latency", captureLatency + targetingLatency);
-                telemetry.addData("Parse Latency", parseLatency);
-                telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+//                Pose3D botpose = result.getBotpose();
+//                double captureLatency = result.getCaptureLatency();
+//                double targetingLatency = result.getTargetingLatency();
+//                double parseLatency = result.getParseLatency();
+//                telemetry.addData("LL Latency", captureLatency + targetingLatency);
+//                telemetry.addData("Parse Latency", parseLatency);
+//                telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
                 
-                if (result.isValid()) {
+//                if (result.isValid()) {
                     telemetry.addData("tx", result.getTx());
                     telemetry.addData("txnc", result.getTxNC());
                     telemetry.addData("ty", result.getTy());
                     telemetry.addData("tync", result.getTyNC());
 
-                    telemetry.addData("Botpose", botpose.toString());
+//                    telemetry.addData("Botpose", botpose.toString());
 
                     // Access barcode results
                     List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
@@ -146,10 +146,10 @@ public class Camera extends LinearOpMode {
                     for (LLResultTypes.ColorResult cr : colorResults) {
                         telemetry.addData("Color", "X: %.2f, Y: %.2f", cr.getTargetXDegrees(), cr.getTargetYDegrees());
                     }
-                }
-            } else {
-                telemetry.addData("Limelight", "No data available");
-            }
+//                }
+//            } else {
+//                telemetry.addData("Limelight", "No data available");
+//            }
 
             telemetry.update();
         }

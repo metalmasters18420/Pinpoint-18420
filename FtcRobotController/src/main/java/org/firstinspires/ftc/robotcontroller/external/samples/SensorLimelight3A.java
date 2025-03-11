@@ -36,9 +36,11 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+// X  -0.21718749403953552
+// Y  -0.5833333134651184
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
@@ -66,8 +68,8 @@ import java.util.List;
  *   and the ip address the Limelight device assigned the Control Hub and which is displayed in small text
  *   below the name of the Limelight on the top level configuration screen.
  */
-@TeleOp(name = "Sensor: Limelight3A", group = "Sensor")
-@Disabled
+@TeleOp(name = "Sensor: Limelight3A!", group = "Sensor")
+//@Disabled
 public class SensorLimelight3A extends LinearOpMode {
 
     private Limelight3A limelight;
@@ -75,15 +77,16 @@ public class SensorLimelight3A extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException
     {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight = hardwareMap.get(Limelight3A.class, "cam");
 
-        telemetry.setMsTransmissionInterval(11);
+        telemetry.setMsTransmissionInterval(10);
 
         limelight.pipelineSwitch(0);
 
         /*
          * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
          */
+
         limelight.start();
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
@@ -101,6 +104,7 @@ public class SensorLimelight3A extends LinearOpMode {
 
             LLResult result = limelight.getLatestResult();
             if (result != null) {
+
                 // Access general information
                 Pose3D botpose = result.getBotpose();
                 double captureLatency = result.getCaptureLatency();
@@ -109,7 +113,7 @@ public class SensorLimelight3A extends LinearOpMode {
                 telemetry.addData("LL Latency", captureLatency + targetingLatency);
                 telemetry.addData("Parse Latency", parseLatency);
                 telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
-                
+
                 if (result.isValid()) {
                     telemetry.addData("tx", result.getTx());
                     telemetry.addData("txnc", result.getTxNC());
@@ -151,7 +155,6 @@ public class SensorLimelight3A extends LinearOpMode {
             } else {
                 telemetry.addData("Limelight", "No data available");
             }
-
             telemetry.update();
         }
         limelight.stop();
