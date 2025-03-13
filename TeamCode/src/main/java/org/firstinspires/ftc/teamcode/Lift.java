@@ -37,12 +37,13 @@ public class Lift {
         right.setTargetPosition(Lrest);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setPower(Lspeed);
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.FORWARD);
 
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setTargetPosition(Lrest);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left.setPower(Lspeed);
+        left.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void LiftBin(){

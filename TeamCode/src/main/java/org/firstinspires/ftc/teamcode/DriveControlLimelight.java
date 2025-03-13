@@ -211,16 +211,18 @@ public class DriveControlLimelight extends  OpMode {
                 }
 
                 if (gamepad1.x){
+                    limelight.pipelineSwitch(1);
                     color = camera.BLUE;
                 }
 
                 if (gamepad1.b){
+                    limelight.pipelineSwitch(2);
                     color = camera.RED;
                 }
             break;
             case YELLOW:
 
-                limelight.pipelineSwitch(0);
+//                limelight.
         }
 
         switch (bobot) {
@@ -556,6 +558,9 @@ public class DriveControlLimelight extends  OpMode {
             telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
 
             if (result.isValid()) {
+
+                telemetry.addData("corner ", result.getDetectorResults().get(0).getTargetCorners());
+
                 telemetry.addData("tx", result.getTx());
                 telemetry.addData("txnc", result.getTxNC());
                 telemetry.addData("ty", result.getTy());

@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
         public static double target = 0;
         public final static double degree_per_volt = 360 / 3.3;
         public static double rPower = 0;
-        public static double offset = 12;
+        public static double offset = 20;
 
         public AnalogInput ELC;
         public DcMotor Rotate;

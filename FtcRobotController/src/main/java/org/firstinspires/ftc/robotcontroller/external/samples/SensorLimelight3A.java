@@ -106,21 +106,26 @@ public class SensorLimelight3A extends LinearOpMode {
             if (result != null) {
 
                 // Access general information
-                Pose3D botpose = result.getBotpose();
+//                Pose3D botpose = result.getBotpose();
                 double captureLatency = result.getCaptureLatency();
                 double targetingLatency = result.getTargetingLatency();
                 double parseLatency = result.getParseLatency();
                 telemetry.addData("LL Latency", captureLatency + targetingLatency);
                 telemetry.addData("Parse Latency", parseLatency);
-                telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
+//                telemetry.addData("PythonOutput", java.util.Arrays.toString(result.getPythonOutput()));
 
                 if (result.isValid()) {
+
+//                    telemetry.addData("corner ", result.getDetectorResults().get(0).getTargetCorners());
+                    telemetry.addData("# results ", result.getDetectorResults().size());
+//                    telemetry.addData("corner ", result.getDetectorResults().get(0).getTargetCorners().toString());
+
                     telemetry.addData("tx", result.getTx());
                     telemetry.addData("txnc", result.getTxNC());
                     telemetry.addData("ty", result.getTy());
                     telemetry.addData("tync", result.getTyNC());
 
-                    telemetry.addData("Botpose", botpose.toString());
+//                    telemetry.addData("Botpose", botpose.toString());
 
                     // Access barcode results
                     List<LLResultTypes.BarcodeResult> barcodeResults = result.getBarcodeResults();
@@ -137,7 +142,7 @@ public class SensorLimelight3A extends LinearOpMode {
                     // Access detector results
                     List<LLResultTypes.DetectorResult> detectorResults = result.getDetectorResults();
                     for (LLResultTypes.DetectorResult dr : detectorResults) {
-                        telemetry.addData("Detector", "Class: %s, Area: %.2f", dr.getClassName(), dr.getTargetArea());
+                        telemetry.addData("Detector", "Class: %s, Area: %.2f, corners ", dr.getClassName(), dr.getTargetArea(), dr.getTargetCorners());
                     }
 
                     // Access fiducial results

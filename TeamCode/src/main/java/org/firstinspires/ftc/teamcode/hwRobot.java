@@ -32,12 +32,16 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.red;
 import static org.firstinspires.ftc.teamcode.VariablesLift.Lrest;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.LPrest;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.RPrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rbar2;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rin;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rrest;
 //import org.firstinspires.ftc.teamcode.common.commandbase.subsystem.Rotate
 
+
+import android.net.LinkProperties;
 
 import androidx.annotation.NonNull;
 
@@ -75,6 +79,9 @@ public class hwRobot {
     public Servo wrist = null;
     public Servo spin = null;
 
+    public Servo Lpto = null;
+    public Servo Rpto = null;
+
     public PIDController controller = null;
 
     public Servo arm = null;
@@ -86,20 +93,26 @@ public class hwRobot {
     public Lift lift = null;
     public hwRobot() {}
 
-
+    //DRIVE MOTORS ALL CH
+    //  LF: 0, LB: 1, RB: 2, RF: 3
+    //Pinpoint CH I2C 1
 
     public void init(HardwareMap hmap) {
         hm = hmap;
         armEncoder = hm.get(AnalogInput.class,"ELC"); //CH Analog Input 0 or 1
+
+        arm = hm.get(Servo.class, "A"); //CH0
+        spin = hm.get(Servo.class, "S"); //CH1
+        wrist = hm.get(Servo.class, "W"); //CH2
+        claw = hm.get(Servo.class, "C"); //CH3
+        Light = hm.get(Servo.class, "L"); //CH5
+
         lLift = hm.get(DcMotor.class, "LL"); //EH0 motor
         rLift = hm.get(DcMotor.class, "RL"); //EH1 motor
         Rotate = hm.get(DcMotorEx.class, "R"); //EH2 motor
-        Light = hm.get(Servo.class, "L"); //EH5
-        claw = hm.get(Servo.class, "C"); //CH3
-        wrist = hm.get(Servo.class, "W"); //CH2
-        arm = hm.get(Servo.class, "A"); //CH4
-        spin = hm.get(Servo.class, "S"); //CH1
-//        lime = hm.get(Limelight3A.class, "cam"); //USB2
+
+        Lpto = hm.get(Servo.class, "LP"); //EH0
+        Rpto = hm.get(Servo.class, "RP"); //EH1
 
         drive = new PinpointDrive(hmap,new Pose2d(0,0,0));
 
@@ -116,6 +129,12 @@ public class hwRobot {
 
         arm.setDirection(Servo.Direction.FORWARD);
         arm.setPosition(Arest);
+
+        Lpto.setDirection(Servo.Direction.FORWARD);
+        Lpto.setPosition(LPrest);
+
+        Rpto.setDirection(Servo.Direction.REVERSE);
+        Rpto.setPosition(RPrest);
 
         lift = new Lift(lLift,rLift);
             lLift.setTargetPosition(Lrest);

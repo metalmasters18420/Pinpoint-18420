@@ -23,6 +23,10 @@ import static org.firstinspires.ftc.teamcode.VariablesDelay.pink;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.off;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.red;
 import static org.firstinspires.ftc.teamcode.VariablesDelay.coords;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.LPon;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.LPrest;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.RPon;
+import static org.firstinspires.ftc.teamcode.VariablesPTO.RPrest;
 import static org.firstinspires.ftc.teamcode.VariablesRotate.Rhang2;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -137,9 +141,13 @@ public class DriveControl extends  OpMode {
             }
             if (a2Toggle){
                 hw.claw.setPosition(Cclose);
+                hw.Lpto.setPosition(LPon);
+                hw.Rpto.setPosition(RPon);
             }
             else {
                 hw.claw.setPosition(Copen);
+                hw.Lpto.setPosition(LPrest);
+                hw.Rpto.setPosition(RPrest);
             }
 
         a2Last = a2Current;
