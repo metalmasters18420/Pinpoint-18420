@@ -75,7 +75,7 @@ public class StoneOrientationExample extends LinearOpMode
             @Override
             public void onOpened()
             {
-                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                phoneCam.startStreaming(480, 640, OpenCvCameraRotation.UPRIGHT);
 
                 pipeline = new StoneOrientationAnalysisPipeline();
                 phoneCam.setPipeline(pipeline);
@@ -91,7 +91,7 @@ public class StoneOrientationExample extends LinearOpMode
         });
 
         // Tell telemetry to update faster than the default 250ms period :)
-        telemetry.setMsTransmissionInterval(20);
+        telemetry.setMsTransmissionInterval(11);
 
         waitForStart();
 
@@ -102,16 +102,16 @@ public class StoneOrientationExample extends LinearOpMode
             sleep(20);
 
             // Figure out which stones the pipeline detected, and print them to telemetry
-            ArrayList<StoneOrientationAnalysisPipeline.AnalyzedStone> stones = pipeline.getDetectedStones();
-            if(stones.isEmpty())
+            ArrayList<StoneOrientationAnalysisPipeline.AnalyzedStone> samples = pipeline.getDetectedStones();
+            if(samples.isEmpty())
             {
-                telemetry.addLine("No stones detected");
+                telemetry.addLine("No samples detected");
             }
             else
             {
-                for(StoneOrientationAnalysisPipeline.AnalyzedStone stone : stones)
+                for(StoneOrientationAnalysisPipeline.AnalyzedStone sample : samples)
                 {
-                    telemetry.addLine(String.format("Stone: Orientation=%s, Angle=%f", stone.orientation.toString(), stone.angle));
+                    telemetry.addLine(String.format("Stone: Orientation=%s, Angle=%f", sample.orientation.toString(), sample.angle));
                 }
             }
 
